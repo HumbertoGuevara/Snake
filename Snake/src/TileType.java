@@ -11,7 +11,9 @@ public enum TileType {
 	
 	SnakeHead,
 	
-	SnakeBody
+	SnakeBody,
+        
+        Venom
 	
 }
 
