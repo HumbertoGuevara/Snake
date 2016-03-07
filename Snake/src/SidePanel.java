@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -17,48 +16,48 @@ public class SidePanel extends JPanel {
 	/**
 	 * Serial Version UID.
 	 */
-	private static final long serialVersionUID = -40557434900946408L;
+	private static final long lSerialVersionUID = -40557434900946408L;
 
 	/**
 	 * The large font to draw with.
 	 */
-	private static final Font LARGE_FONT = new Font("Tahoma", Font.BOLD, 20);
+	private static final Font fntLARGE_FONT = new Font("Tahoma", Font.BOLD, 20);
 	
 	/**
 	 * The medium font to draw with.
 	 */
-	private static final Font MEDIUM_FONT = new Font("Tahoma", Font.BOLD, 16);
+	private static final Font fntMEDIUM_FONT = new Font("Tahoma", Font.BOLD, 16);
 
 	/**
 	 * The small font to draw with.
 	 */
-	private static final Font SMALL_FONT = new Font("Tahoma", Font.BOLD, 12);
+	private static final Font fntSMALL_FONT = new Font("Tahoma", Font.BOLD, 12);
 	
 	/**
 	 * The SnakeGame instance.
 	 */
-	private SnakeGame game;
+	private SnakeGame snkGame;
 	
 	/**
 	 * Creates a new SidePanel instance.
 	 * @param game The SnakeGame instance.
 	 */
-	public SidePanel(SnakeGame game) {
-		this.game = game;
+	public SidePanel(SnakeGame snkGame) {
+		this.snkGame = snkGame;
 		
-		setPreferredSize(new Dimension(300, BoardPanel.ROW_COUNT * BoardPanel.TILE_SIZE));
+		setPreferredSize(new Dimension(300, BoardPanel.iROW_COUNT * BoardPanel.iTILE_SIZE));
 		setBackground(Color.BLACK);
 	}
 	
-	private static final int STATISTICS_OFFSET = 150;
+	private static final int iSTATISTICS_OFFSET = 150;
 	
-	private static final int CONTROLS_OFFSET = 320;
+	private static final int iCONTROLS_OFFSET = 320;
 	
-	private static final int MESSAGE_STRIDE = 30;
+	private static final int iMESSAGE_STRIDE = 30;
 	
-	private static final int SMALL_OFFSET = 30;
+	private static final int iSMALL_OFFSET = 30;
 	
-	private static final int LARGE_OFFSET = 50;
+	private static final int iLARGE_OFFSET = 50;
 	
 	@Override
 	public void paintComponent(Graphics g) {
@@ -72,33 +71,33 @@ public class SidePanel extends JPanel {
 		/*
 		 * Draw the game name onto the window.
 		 */
-		g.setFont(LARGE_FONT);
+		g.setFont(fntLARGE_FONT);
 		g.drawString("Snake Game", getWidth() / 2 - g.getFontMetrics().stringWidth("Snake Game") / 2, 50);
 		
 		/*
 		 * Draw the categories onto the window.
 		 */
-		g.setFont(MEDIUM_FONT);
-		g.drawString("Statistics", SMALL_OFFSET, STATISTICS_OFFSET);
-		g.drawString("Controls", SMALL_OFFSET, CONTROLS_OFFSET);
+		g.setFont(fntMEDIUM_FONT);
+		g.drawString("Statistics", iSMALL_OFFSET, iSTATISTICS_OFFSET);
+		g.drawString("Controls", iSMALL_OFFSET, iCONTROLS_OFFSET);
 				
 		/*
 		 * Draw the category content onto the window.
 		 */
-		g.setFont(SMALL_FONT);
+		g.setFont(fntSMALL_FONT);
 		
 		//Draw the content for the statistics category.
-		int drawY = STATISTICS_OFFSET;
-		g.drawString("Total Score: " + game.getScore(), LARGE_OFFSET, drawY += MESSAGE_STRIDE);
-		g.drawString("Fruit Eaten: " + game.getFruitsEaten(), LARGE_OFFSET, drawY += MESSAGE_STRIDE);
-		g.drawString("Fruit Score: " + game.getNextFruitScore(), LARGE_OFFSET, drawY += MESSAGE_STRIDE);
+		int iDrawY = iSTATISTICS_OFFSET;
+		g.drawString("Total Score: " + snkGame.getScore(), iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
+		g.drawString("Fruit Eaten: " + snkGame.getFruitsEaten(), iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
+		g.drawString("Fruit Score: " + snkGame.getNextFruitScore(), iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
 		//Draw the content for the controls category.
-		drawY = CONTROLS_OFFSET;
-		g.drawString("Move Up: W / Up Arrowkey", LARGE_OFFSET, drawY += MESSAGE_STRIDE);
-		g.drawString("Move Down: S / Down Arrowkey", LARGE_OFFSET, drawY += MESSAGE_STRIDE);
-		g.drawString("Move Left: A / Left Arrowkey", LARGE_OFFSET, drawY += MESSAGE_STRIDE);
-		g.drawString("Move Right: D / Right Arrowkey", LARGE_OFFSET, drawY += MESSAGE_STRIDE);
-		g.drawString("Pause Game: P", LARGE_OFFSET, drawY += MESSAGE_STRIDE);
+		iDrawY = iCONTROLS_OFFSET;
+		g.drawString("Move Up: W / Up Arrowkey", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
+		g.drawString("Move Down: S / Down Arrowkey", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
+		g.drawString("Move Left: A / Left Arrowkey", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
+		g.drawString("Move Right: D / Right Arrowkey", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
+		g.drawString("Pause Game: P", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
 	}
 
 }

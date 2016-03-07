@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -18,39 +17,39 @@ public class BoardPanel extends JPanel {
 	/**
 	 * Serial Version UID.
 	 */
-	private static final long serialVersionUID = -1102632585936750607L;
+	private static final long lSerialVersionUID = -1102632585936750607L;
 
 	/**
 	 * The number of columns on the board. (Should be odd so we can start in
 	 * the center).
 	 */
-	public static final int COL_COUNT = 25;
+	public static final int iCOL_COUNT = 25;
 	
 	/**
 	 * The number of rows on the board. (Should be odd so we can start in
 	 * the center).
 	 */
-	public static final int ROW_COUNT = 25;
+	public static final int iROW_COUNT = 25;
 	
 	/**
 	 * The size of each tile in pixels.
 	 */
-	public static final int TILE_SIZE = 20;
+	public static final int iTILE_SIZE = 20;
 	
 	/**
 	 * The number of pixels to offset the eyes from the sides.
 	 */
-	private static final int EYE_LARGE_INSET = TILE_SIZE / 3;
+	private static final int EYE_LARGE_INSET = iTILE_SIZE / 3;
 	
 	/**
 	 * The number of pixels to offset the eyes from the front.
 	 */
-	private static final int EYE_SMALL_INSET = TILE_SIZE / 6;
+	private static final int EYE_SMALL_INSET = iTILE_SIZE / 6;
 	
 	/**
 	 * The length of the eyes from the base (small inset).
 	 */
-	private static final int EYE_LENGTH = TILE_SIZE / 5;
+	private static final int EYE_LENGTH = iTILE_SIZE / 5;
 	
 	/**
 	 * The font to draw the text with.
@@ -73,9 +72,9 @@ public class BoardPanel extends JPanel {
 	 */
 	public BoardPanel(SnakeGame game) {
 		this.game = game;
-		this.tiles = new TileType[ROW_COUNT * COL_COUNT];
+		this.tiles = new TileType[iROW_COUNT * iCOL_COUNT];
 		
-		setPreferredSize(new Dimension(COL_COUNT * TILE_SIZE, ROW_COUNT * TILE_SIZE));
+		setPreferredSize(new Dimension(iCOL_COUNT * iTILE_SIZE, iROW_COUNT * iTILE_SIZE));
 		setBackground(Color.BLACK);
 	}
 	
@@ -104,7 +103,7 @@ public class BoardPanel extends JPanel {
 	 * @param type The type to set the tile to.
 	 */
 	public void setTile(int x, int y, TileType type) {
-		tiles[y * ROW_COUNT + x] = type;
+		tiles[y * iROW_COUNT + x] = type;
 	}
 	
 	/**
@@ -114,7 +113,7 @@ public class BoardPanel extends JPanel {
 	 * @return
 	 */
 	public TileType getTile(int x, int y) {
-		return tiles[y * ROW_COUNT + x];
+		return tiles[y * iROW_COUNT + x];
 	}
 	
 	@Override
@@ -125,11 +124,11 @@ public class BoardPanel extends JPanel {
 		 * Loop through each tile on the board and draw it if it
 		 * is not null.
 		 */
-		for(int x = 0; x < COL_COUNT; x++) {
-			for(int y = 0; y < ROW_COUNT; y++) {
+		for(int x = 0; x < iCOL_COUNT; x++) {
+			for(int y = 0; y < iROW_COUNT; y++) {
 				TileType type = getTile(x, y);
 				if(type != null) {
-					drawTile(x * TILE_SIZE, y * TILE_SIZE, type, g);
+					drawTile(x * iTILE_SIZE, y * iTILE_SIZE, type, g);
 				}
 			}
 		}
@@ -143,10 +142,10 @@ public class BoardPanel extends JPanel {
 		 */
 		g.setColor(Color.DARK_GRAY);
 		g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-		for(int x = 0; x < COL_COUNT; x++) {
-			for(int y = 0; y < ROW_COUNT; y++) {
-				g.drawLine(x * TILE_SIZE, 0, x * TILE_SIZE, getHeight());
-				g.drawLine(0, y * TILE_SIZE, getWidth(), y * TILE_SIZE);
+		for(int x = 0; x < iCOL_COUNT; x++) {
+			for(int y = 0; y < iROW_COUNT; y++) {
+				g.drawLine(x * iTILE_SIZE, 0, x * iTILE_SIZE, getHeight());
+				g.drawLine(0, y * iTILE_SIZE, getWidth(), y * iTILE_SIZE);
 			}
 		}		
 		
@@ -209,7 +208,7 @@ public class BoardPanel extends JPanel {
 		 */
 		case Fruit:
 			g.setColor(Color.RED);
-			g.fillOval(x + 2, y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+			g.fillOval(x + 2, y + 2, iTILE_SIZE - 4, iTILE_SIZE - 4);
 			break;
 			
 		/*
@@ -218,7 +217,7 @@ public class BoardPanel extends JPanel {
 		 */
 		case SnakeBody:
 			g.setColor(Color.GREEN);
-			g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+			g.fillRect(x, y, iTILE_SIZE, iTILE_SIZE);
 			break;
 			
 		/*
@@ -228,7 +227,7 @@ public class BoardPanel extends JPanel {
 		case SnakeHead:
 			//Fill the tile in with green.
 			g.setColor(Color.GREEN);
-			g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+			g.fillRect(x, y, iTILE_SIZE, iTILE_SIZE);
 			
 			//Set the color to black so that we can start drawing the eyes.
 			g.setColor(Color.BLACK);
@@ -264,28 +263,28 @@ public class BoardPanel extends JPanel {
 			case North: {
 				int baseY = y + EYE_SMALL_INSET;
 				g.drawLine(x + EYE_LARGE_INSET, baseY, x + EYE_LARGE_INSET, baseY + EYE_LENGTH);
-				g.drawLine(x + TILE_SIZE - EYE_LARGE_INSET, baseY, x + TILE_SIZE - EYE_LARGE_INSET, baseY + EYE_LENGTH);
+				g.drawLine(x + iTILE_SIZE - EYE_LARGE_INSET, baseY, x + iTILE_SIZE - EYE_LARGE_INSET, baseY + EYE_LENGTH);
 				break;
 			}
 				
 			case South: {
-				int baseY = y + TILE_SIZE - EYE_SMALL_INSET;
+				int baseY = y + iTILE_SIZE - EYE_SMALL_INSET;
 				g.drawLine(x + EYE_LARGE_INSET, baseY, x + EYE_LARGE_INSET, baseY - EYE_LENGTH);
-				g.drawLine(x + TILE_SIZE - EYE_LARGE_INSET, baseY, x + TILE_SIZE - EYE_LARGE_INSET, baseY - EYE_LENGTH);
+				g.drawLine(x + iTILE_SIZE - EYE_LARGE_INSET, baseY, x + iTILE_SIZE - EYE_LARGE_INSET, baseY - EYE_LENGTH);
 				break;
 			}
 			
 			case West: {
 				int baseX = x + EYE_SMALL_INSET;
 				g.drawLine(baseX, y + EYE_LARGE_INSET, baseX + EYE_LENGTH, y + EYE_LARGE_INSET);
-				g.drawLine(baseX, y + TILE_SIZE - EYE_LARGE_INSET, baseX + EYE_LENGTH, y + TILE_SIZE - EYE_LARGE_INSET);
+				g.drawLine(baseX, y + iTILE_SIZE - EYE_LARGE_INSET, baseX + EYE_LENGTH, y + iTILE_SIZE - EYE_LARGE_INSET);
 				break;
 			}
 				
 			case East: {
-				int baseX = x + TILE_SIZE - EYE_SMALL_INSET;
+				int baseX = x + iTILE_SIZE - EYE_SMALL_INSET;
 				g.drawLine(baseX, y + EYE_LARGE_INSET, baseX - EYE_LENGTH, y + EYE_LARGE_INSET);
-				g.drawLine(baseX, y + TILE_SIZE - EYE_LARGE_INSET, baseX - EYE_LENGTH, y + TILE_SIZE - EYE_LARGE_INSET);
+				g.drawLine(baseX, y + iTILE_SIZE - EYE_LARGE_INSET, baseX - EYE_LENGTH, y + iTILE_SIZE - EYE_LARGE_INSET);
 				break;
 			}
 			

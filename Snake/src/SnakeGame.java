@@ -368,7 +368,7 @@ public class SnakeGame extends JFrame {
 		 * return that it's collided with itself, as both cases are handled
 		 * identically.
 		 */
-		if(pntHead.x < 0 || pntHead.x >= BoardPanel.COL_COUNT || pntHead.y < 0 || pntHead.y >= BoardPanel.ROW_COUNT) {
+		if(pntHead.x < 0 || pntHead.x >= BoardPanel.iCOL_COUNT || pntHead.y < 0 || pntHead.y >= BoardPanel.iROW_COUNT) {
 			return TileType.SnakeBody; //Pretend we collided with our body.
 		}
 		
@@ -431,7 +431,7 @@ public class SnakeGame extends JFrame {
 		/*
 		 * Create the head at the center of the board.
 		 */
-		Point pntHead = new Point(BoardPanel.COL_COUNT / 2, BoardPanel.ROW_COUNT / 2);
+		Point pntHead = new Point(BoardPanel.iCOL_COUNT / 2, BoardPanel.iROW_COUNT / 2);
 
 		/*
 		 * Clear the snake list and add the head.
@@ -497,7 +497,7 @@ public class SnakeGame extends JFrame {
 		/*
 		 * Get a random index based on the number of free spaces left on the board.
 		 */
-		int index = ranRandom.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - lklSnake.size());
+		int index = ranRandom.nextInt(BoardPanel.iCOL_COUNT * BoardPanel.iROW_COUNT - lklSnake.size());
 		
 		/*
 		 * While we could just as easily choose a random index on the board
@@ -510,8 +510,8 @@ public class SnakeGame extends JFrame {
 		 * size of the snake.
 		 */
 		int freeFound = -1;
-		for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
-			for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
+		for(int x = 0; x < BoardPanel.iCOL_COUNT; x++) {
+			for(int y = 0; y < BoardPanel.iROW_COUNT; y++) {
 				TileType type = bpnBoard.getTile(x, y);
 				if(type == null || type == TileType.Fruit) {
 					if(++freeFound == index) {
