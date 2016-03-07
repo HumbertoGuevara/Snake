@@ -10,35 +10,35 @@ public class Clock {
 	/**
 	 * The number of milliseconds that make up one cycle.
 	 */
-	private float fMillisPerCycle;
+	private float millisPerCycle;
 	
 	/**
 	 * The last time that the clock was updated (used for calculating the
 	 * delta time).
 	 */
-	private long lLastUpdate;
+	private long lastUpdate;
 	
 	/**
 	 * The number of cycles that have elapsed and have not yet been polled.
 	 */
-	private int iElapsedCycles;
+	private int elapsedCycles;
 	
 	/**
 	 * The amount of excess time towards the next elapsed cycle.
 	 */
-	private float fExcessCycles;
+	private float excessCycles;
 	
 	/**
 	 * Whether or not the clock is paused.
 	 */
-	private boolean bIsPaused;
+	private boolean isPaused;
 	
 	/**
 	 * Creates a new clock and sets it's cycles-per-second.
 	 * @param cyclesPerSecond The number of cycles that elapse per second.
 	 */
-	public Clock(float fCyclesPerSecond) {
-		setCyclesPerSecond(fCyclesPerSecond);
+	public Clock(float cyclesPerSecond) {
+		setCyclesPerSecond(cyclesPerSecond);
 		reset();
 	}
 	
@@ -46,8 +46,8 @@ public class Clock {
 	 * Sets the number of cycles that elapse per second.
 	 * @param cyclesPerSecond The number of cycles per second.
 	 */
-	public void setCyclesPerSecond(float fCyclesPerSecond) {
-		this.fMillisPerCycle = (1.0f / fCyclesPerSecond) * 1000;
+	public void setCyclesPerSecond(float cyclesPerSecond) {
+		this.millisPerCycle = (1.0f / cyclesPerSecond) * 1000;
 	}
 	
 	/**
@@ -56,10 +56,10 @@ public class Clock {
 	 * paused flag will be set to false.
 	 */
 	public void reset() {
-		this.iElapsedCycles = 0;
-		this.fExcessCycles = 0.0f;
-		this.lLastUpdate = getCurrentTime();
-		this.bIsPaused = false;
+		this.elapsedCycles = 0;
+		this.excessCycles = 0.0f;
+		this.lastUpdate = getCurrentTime();
+		this.isPaused = false;
 	}
 	
 	/**
@@ -70,17 +70,17 @@ public class Clock {
 	 */
 	public void update() {
 		//Get the current time and calculate the delta time.
-		long lCurrUpdate = getCurrentTime();
-		float fDelta = (float)(lCurrUpdate - lLastUpdate) + fExcessCycles;
+		long currUpdate = getCurrentTime();
+		float delta = (float)(currUpdate - lastUpdate) + excessCycles;
 		
 		//Update the number of elapsed and excess ticks if we're not paused.
-		if(!bIsPaused) {
-			this.iElapsedCycles += (int)Math.floor(fDelta / fMillisPerCycle);
-			this.fExcessCycles = fDelta % fMillisPerCycle;
+		if(!isPaused) {
+			this.elapsedCycles += (int)Math.floor(delta / millisPerCycle);
+			this.excessCycles = delta % millisPerCycle;
 		}
 		
 		//Set the last update time for the next update cycle.
-		this.lLastUpdate = lCurrUpdate;
+		this.lastUpdate = currUpdate;
 	}
 	
 	/**
@@ -89,8 +89,8 @@ public class Clock {
 	 * still be called every frame to prevent issues.
 	 * @param paused Whether or not to pause this clock.
 	 */
-	public void setPaused(boolean bPaused) {
-		this.bIsPaused = bPaused;
+	public void setPaused(boolean paused) {
+		this.isPaused = paused;
 	}
 	
 	/**
@@ -98,7 +98,7 @@ public class Clock {
 	 * @return Whether or not this clock is paused.
 	 */
 	public boolean isPaused() {
-		return bIsPaused;
+		return isPaused;
 	}
 	
 	/**
@@ -108,8 +108,8 @@ public class Clock {
 	 * @see peekElapsedCycle
 	 */
 	public boolean hasElapsedCycle() {
-		if(iElapsedCycles > 0) {
-			this.iElapsedCycles--;
+		if(elapsedCycles > 0) {
+			this.elapsedCycles--;
 			return true;
 		}
 		return false;
@@ -123,7 +123,7 @@ public class Clock {
 	 * @see hasElapsedCycle
 	 */
 	public boolean peekElapsedCycle() {
-		return (iElapsedCycles > 0);
+		return (elapsedCycles > 0);
 	}
 	
 	/**
