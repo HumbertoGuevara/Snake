@@ -597,7 +597,12 @@ public class SnakeGame extends JFrame {
     public Direction getDirection() {
         return lklDirections.peek();
     }
-
+    public void Guardar(){
+        
+    }
+    public void Cargar(){
+        
+    }
     /**
      * Entry point of the program.
      *
