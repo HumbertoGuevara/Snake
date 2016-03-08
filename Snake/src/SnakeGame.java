@@ -437,13 +437,13 @@ public class SnakeGame extends JFrame {
 		 * Create the head at the center of the board.
          */
         Point pntHead = new Point(BoardPanel.iCOL_COUNT / 2, BoardPanel.iROW_COUNT / 2);
-
+        
         /*
 		 * Clear the snake list and add the head.
          */
         lklSnake.clear();
         lklSnake.add(pntHead);
-
+        
         /*
 		 * Clear the board and add the head.
          */
