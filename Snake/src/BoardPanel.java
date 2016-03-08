@@ -7,7 +7,6 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.net.URL;
-
 import javax.swing.JPanel;
 
 /**
@@ -313,5 +312,51 @@ public class BoardPanel extends JPanel {
 
         }
     }
-
+    public int[] getTablero(){
+        int iarrSalida[] = new int[tltTiles.length];
+        for(int iC=0;iC<tltTiles.length;iC++){
+            if(tltTiles[iC]==null){
+                iarrSalida[iC]=-1;
+            }else{
+            switch(tltTiles[iC]){
+                case Fruit:
+                    iarrSalida[iC] = 1;
+                    break;
+                case SnakeHead:
+                    iarrSalida[iC] = 2;
+                    break;
+                case SnakeBody:
+                    iarrSalida[iC] = 3;
+                    break;
+                case Venom:
+                    iarrSalida[iC] = 4;
+                    break;
+                    
+            }
+            }
+        }
+        return iarrSalida;
+    }
+    public void setTablero(int[] iArrEntrada){
+        tltTiles = new TileType[iArrEntrada.length];
+        for(int iC=0;iC<iArrEntrada.length;iC++){
+            switch(iArrEntrada[iC]){
+                case -1:
+                    tltTiles[iC] = null;
+                    break;
+                case 1:
+                    tltTiles[iC] = TileType.Fruit;
+                    break;
+                case 2:
+                    tltTiles[iC] = TileType.SnakeHead;
+                    break;
+                case 3:
+                    tltTiles[iC] = TileType.SnakeBody;
+                    break;
+                case 4:
+                    tltTiles[iC] = TileType.Venom;
+                    break;
+            }
+        }
+    }
 }

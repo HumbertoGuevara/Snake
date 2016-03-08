@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.RandomAccessFile;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -222,6 +223,12 @@ public class SnakeGame extends JFrame {
                         if (bIsNewGame || bIsGameOver) {
                             resetGame();
                         }
+                        break;
+                    case KeyEvent.VK_C:
+                        Cargar();
+                        break;
+                    case KeyEvent.VK_G:
+                        Guardar();
                         break;
                 }
             }
@@ -597,10 +604,119 @@ public class SnakeGame extends JFrame {
     public Direction getDirection() {
         return lklDirections.peek();
     }
+    /**
+     * Funcion de guardar
+     * toma el estado actual del juego y lo guarda en un archivo de acceso
+     * aelatorio para poder cargarlo después
+     */
     public void Guardar(){
-        
+        try{
+        RandomAccessFile rafSalida;
+        rafSalida = new RandomAccessFile("datos.dat","rw");
+        //almacenar las variables del funcionamiento del juego
+        rafSalida.writeInt(iScore);
+        rafSalida.writeInt(iFruitsEaten);
+        rafSalida.writeInt(iNextFruitScore);
+        rafSalida.writeBoolean(bIsNewGame);
+        rafSalida.writeBoolean(bIsPaused);
+        rafSalida.writeBoolean(bIsGameOver);
+        //almacenar las coordenadas de la snake
+        rafSalida.writeInt(lklSnake.size());
+        for(int iC=0;iC<lklSnake.size();iC++){
+            rafSalida.writeInt(lklSnake.get(iC).x);
+            rafSalida.writeInt(lklSnake.get(iC).y);
+        }
+        //almacenar las direcciones de la snake
+        rafSalida.writeInt(lklDirections.size());
+        for(int iC=0;iC<lklDirections.size();iC++){
+            Direction dirTemp = lklDirections.get(iC);
+            switch(dirTemp){
+                case North:
+                    rafSalida.writeInt(1);
+                    break;
+                case South:
+                    rafSalida.writeInt(2);
+                    break;
+                case East:
+                    rafSalida.writeInt(3);
+                    break;
+                case West:
+                    rafSalida.writeInt(4);
+                    break;
+                    
+            }
+        }
+        //almacenar el tablero
+        int iarrTablero[] = bpnBoard.getTablero();
+        rafSalida.writeInt(iarrTablero.length);
+        for(int iC=0;iC<iarrTablero.length;iC++){
+            rafSalida.writeInt(iarrTablero[iC]);
+        }
+        rafSalida.close();
+        }catch(Exception e){
+            System.out.println(e);
+        }
     }
+    /**
+     * Funcion de cargar:
+     * Toma el archivo de guardado y lo carga en el estado actual del juego
+     * 
+     */
     public void Cargar(){
+        RandomAccessFile rafEntrada;
+        try{
+            rafEntrada = new RandomAccessFile("datos.dat","rw");
+        //primero se cargan las variables de estado
+        this.iScore = rafEntrada.readInt();
+        this.iFruitsEaten = rafEntrada.readInt();
+        this.iNextFruitScore = rafEntrada.readInt();
+        this.bIsNewGame = rafEntrada.readBoolean();
+        this.bIsPaused = rafEntrada.readBoolean();
+        this.bIsGameOver = rafEntrada.readBoolean();
+        //cargar la serpiente
+        lklSnake.clear();
+        int iElementos = rafEntrada.readInt();
+        for(int iC=0;iC<iElementos;iC++){
+            int iX = rafEntrada.readInt();
+            int iY = rafEntrada.readInt();
+            Point pntTemp = new Point(iX,iY);
+            lklSnake.add(pntTemp);
+        }
+        //cargar las direcciones
+        iElementos = rafEntrada.readInt();
+        lklDirections.clear();
+        for(int iC=0;iC<iElementos;iC++){
+            int iDireccion = rafEntrada.readInt();
+            switch(iDireccion){
+                case 1:
+                    lklDirections.add(Direction.North);
+                    break;
+                case 2:
+                    lklDirections.add(Direction.South);
+                    break;
+                case 3:
+                    lklDirections.add(Direction.East);
+                    break;
+                case 4:
+                    lklDirections.add(Direction.West);
+                    break;
+            }
+        }
+        //cargar el tablero 
+        iElementos = rafEntrada.readInt();
+        int iArrTablero[] = new int[iElementos];
+        for(int iC=0;iC<iElementos;iC++){
+            iArrTablero[iC] = rafEntrada.readInt();
+        }
+        bpnBoard.setTablero(iArrTablero);
+        clkLogicTimer.reset();
+        if(bIsPaused){
+            clkLogicTimer.setPaused(true);
+        }
+        rafEntrada.close();
+        }catch(Exception e){
+            System.out.println(e);
+        }
         
     }
     /**

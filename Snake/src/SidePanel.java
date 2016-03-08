@@ -79,7 +79,7 @@ public class SidePanel extends JPanel {
 		 */
 		g.setFont(fntMEDIUM_FONT);
 		g.drawString("Statistics", iSMALL_OFFSET, iSTATISTICS_OFFSET);
-		g.drawString("Controls", iSMALL_OFFSET, iCONTROLS_OFFSET);
+		g.drawString("Controls", iSMALL_OFFSET, iCONTROLS_OFFSET-50);
 				
 		/*
 		 * Draw the category content onto the window.
@@ -92,12 +92,14 @@ public class SidePanel extends JPanel {
 		g.drawString("Fruit Eaten: " + snkGame.getFruitsEaten(), iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
 		g.drawString("Fruit Score: " + snkGame.getNextFruitScore(), iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
 		//Draw the content for the controls category.
-		iDrawY = iCONTROLS_OFFSET;
+		iDrawY = iCONTROLS_OFFSET-50;
 		g.drawString("Move Up: W / Up Arrowkey", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
 		g.drawString("Move Down: S / Down Arrowkey", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
 		g.drawString("Move Left: A / Left Arrowkey", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
 		g.drawString("Move Right: D / Right Arrowkey", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
 		g.drawString("Pause Game: P", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
+                g.drawString("Save Game: G", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
+                g.drawString("Load Game: C", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
 	}
 
 }
