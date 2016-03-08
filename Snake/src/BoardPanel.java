@@ -39,40 +39,40 @@ public class BoardPanel extends JPanel {
 	/**
 	 * The number of pixels to offset the eyes from the sides.
 	 */
-	private static final int EYE_LARGE_INSET = iTILE_SIZE / 3;
+	private static final int iEYE_LARGE_INSET = iTILE_SIZE / 3;
 	
 	/**
 	 * The number of pixels to offset the eyes from the front.
 	 */
-	private static final int EYE_SMALL_INSET = iTILE_SIZE / 6;
+	private static final int iEYE_SMALL_INSET = iTILE_SIZE / 6;
 	
 	/**
 	 * The length of the eyes from the base (small inset).
 	 */
-	private static final int EYE_LENGTH = iTILE_SIZE / 5;
+	private static final int iEYE_LENGTH = iTILE_SIZE / 5;
 	
 	/**
 	 * The font to draw the text with.
 	 */
-	private static final Font FONT = new Font("Tahoma", Font.BOLD, 25);
+	private static final Font fntFONT = new Font("Tahoma", Font.BOLD, 25);
 		
 	/**
 	 * The SnakeGame instance.
 	 */
-	private SnakeGame game;
+	private SnakeGame snkGame;
 	
 	/**
 	 * The array of tiles that make up this board.
 	 */
-	private TileType[] tiles;
+	private TileType[] tltTiles;
 		
 	/**
 	 * Creates a new BoardPanel instance.
-	 * @param game The SnakeGame instance.
+	 * @param snkGame The SnakeGame instance.
 	 */
-	public BoardPanel(SnakeGame game) {
-		this.game = game;
-		this.tiles = new TileType[iROW_COUNT * iCOL_COUNT];
+	public BoardPanel(SnakeGame snkGame) {
+		this.snkGame = snkGame;
+		this.tltTiles = new TileType[iROW_COUNT * iCOL_COUNT];
 		
 		setPreferredSize(new Dimension(iCOL_COUNT * iTILE_SIZE, iROW_COUNT * iTILE_SIZE));
 		setBackground(Color.BLACK);
@@ -82,38 +82,38 @@ public class BoardPanel extends JPanel {
 	 * Clears all of the tiles on the board and sets their values to null.
 	 */
 	public void clearBoard() {
-		for(int i = 0; i < tiles.length; i++) {
-			tiles[i] = null;
+		for(int i = 0; i < tltTiles.length; i++) {
+			tltTiles[i] = null;
 		}
 	}
 	
 	/**
 	 * Sets the tile at the desired coordinate.
-	 * @param point The coordinate of the tile.
-	 * @param type The type to set the tile to.
+	 * @param pntPoint The coordinate of the tile.
+	 * @param tltType The type to set the tile to.
 	 */
-	public void setTile(Point point, TileType type) {
-		setTile(point.x, point.y, type);
+	public void setTile(Point pntPoint, TileType tltType) {
+		setTile(pntPoint.x, pntPoint.y, tltType);
 	}
 	
 	/**
 	 * Sets the tile at the desired coordinate.
-	 * @param x The x coordinate of the tile.
-	 * @param y The y coordinate of the tile.
-	 * @param type The type to set the tile to.
+	 * @param iX The x coordinate of the tile.
+	 * @param iY The y coordinate of the tile.
+	 * @param tltType The type to set the tile to.
 	 */
-	public void setTile(int x, int y, TileType type) {
-		tiles[y * iROW_COUNT + x] = type;
+	public void setTile(int iX, int iY, TileType tltType) {
+		tltTiles[iY * iROW_COUNT + iX] = tltType;
 	}
 	
 	/**
 	 * Gets the tile at the desired coordinate.
-	 * @param x The x coordinate of the tile.
-	 * @param y The y coordinate of the tile.
+	 * @param iX The x coordinate of the tile.
+	 * @param iY The y coordinate of the tile.
 	 * @return
 	 */
-	public TileType getTile(int x, int y) {
-		return tiles[y * iROW_COUNT + x];
+	public TileType getTile(int iX, int iY) {
+		return tltTiles[iY * iROW_COUNT + iX];
 	}
 	
 	@Override
@@ -124,11 +124,11 @@ public class BoardPanel extends JPanel {
 		 * Loop through each tile on the board and draw it if it
 		 * is not null.
 		 */
-		for(int x = 0; x < iCOL_COUNT; x++) {
-			for(int y = 0; y < iROW_COUNT; y++) {
-				TileType type = getTile(x, y);
-				if(type != null) {
-					drawTile(x * iTILE_SIZE, y * iTILE_SIZE, type, g);
+		for(int iX = 0; iX < iCOL_COUNT; iX++) {
+			for(int iY = 0; iY < iROW_COUNT; iY++) {
+				TileType tltType = getTile(iX, iY);
+				if(tltType != null) {
+					drawTile(iX * iTILE_SIZE, iY * iTILE_SIZE, tltType, g);
 				}
 			}
 		}
@@ -142,65 +142,65 @@ public class BoardPanel extends JPanel {
 		 */
 		g.setColor(Color.DARK_GRAY);
 		g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-		for(int x = 0; x < iCOL_COUNT; x++) {
-			for(int y = 0; y < iROW_COUNT; y++) {
-				g.drawLine(x * iTILE_SIZE, 0, x * iTILE_SIZE, getHeight());
-				g.drawLine(0, y * iTILE_SIZE, getWidth(), y * iTILE_SIZE);
+		for(int iX = 0; iX < iCOL_COUNT; iX++) {
+			for(int iY = 0; iY < iROW_COUNT; iY++) {
+				g.drawLine(iX * iTILE_SIZE, 0, iX * iTILE_SIZE, getHeight());
+				g.drawLine(0, iY * iTILE_SIZE, getWidth(), iY * iTILE_SIZE);
 			}
 		}		
 		
 		/*
 		 * Show a message on the screen based on the current game state.
 		 */
-		if(game.isGameOver() || game.isNewGame() || game.isPaused()) {
+		if(snkGame.isGameOver() || snkGame.isNewGame() || snkGame.isPaused()) {
 			g.setColor(Color.WHITE);
 			
 			/*
 			 * Get the center coordinates of the board.
 			 */
-			int centerX = getWidth() / 2;
-			int centerY = getHeight() / 2;
+			int iCenterX = getWidth() / 2;
+			int iCenterY = getHeight() / 2;
 			
 			/*
 			 * Allocate the messages for and set their values based on the game
 			 * state.
 			 */
-			String largeMessage = null;
-			String smallMessage = null;
-			if(game.isNewGame()) {
-				largeMessage = "Snake Game!";
-				smallMessage = "Press Enter to Start";
-			} else if(game.isGameOver()) {
-				largeMessage = "Game Over!";
-				smallMessage = "Press Enter to Restart";
-			} else if(game.isPaused()) {
-				largeMessage = "Paused";
-				smallMessage = "Press P to Resume";
+			String sLargeMessage = null;
+			String sSmallMessage = null;
+			if(snkGame.isNewGame()) {
+				sLargeMessage = "Snake Game!";
+				sSmallMessage = "Press Enter to Start";
+			} else if(snkGame.isGameOver()) {
+				sLargeMessage = "Game Over!";
+				sSmallMessage = "Press Enter to Restart";
+			} else if(snkGame.isPaused()) {
+				sLargeMessage = "Paused";
+				sSmallMessage = "Press P to Resume";
 			}
 			
 			/*
 			 * Set the message font and draw the messages in the center of the board.
 			 */
-			g.setFont(FONT);
-			g.drawString(largeMessage, centerX - g.getFontMetrics().stringWidth(largeMessage) / 2, centerY - 50);
-			g.drawString(smallMessage, centerX - g.getFontMetrics().stringWidth(smallMessage) / 2, centerY + 50);
+			g.setFont(fntFONT);
+			g.drawString(sLargeMessage, iCenterX - g.getFontMetrics().stringWidth(sLargeMessage) / 2, iCenterY - 50);
+			g.drawString(sSmallMessage, iCenterX - g.getFontMetrics().stringWidth(sSmallMessage) / 2, iCenterY + 50);
 		}
 	}
 	
 	/**
 	 * Draws a tile onto the board.
-	 * @param x The x coordinate of the tile (in pixels).
-	 * @param y The y coordinate of the tile (in pixels).
-	 * @param type The type of tile to draw.
+	 * @param iX The x coordinate of the tile (in pixels).
+	 * @param iY The y coordinate of the tile (in pixels).
+	 * @param tltType The type of tile to draw.
 	 * @param g The graphics object to draw to.
 	 */
-	private void drawTile(int x, int y, TileType type, Graphics g) {
+	private void drawTile(int iX, int iY, TileType tltType, Graphics g) {
 		/*
 		 * Because each type of tile is drawn differently, it's easiest
 		 * to just run through a switch statement rather than come up with some
 		 * overly complex code to handle everything.
 		 */
-		switch(type) {
+		switch(tltType) {
 		
 		/*
 		 * A fruit is depicted as a small red circle that with a bit of padding
@@ -208,7 +208,7 @@ public class BoardPanel extends JPanel {
 		 */
 		case Fruit:
 			g.setColor(Color.RED);
-			g.fillOval(x + 2, y + 2, iTILE_SIZE - 4, iTILE_SIZE - 4);
+			g.fillOval(iX + 2, iY + 2, iTILE_SIZE - 4, iTILE_SIZE - 4);
 			break;
 			
 		/*
@@ -217,7 +217,7 @@ public class BoardPanel extends JPanel {
 		 */
 		case SnakeBody:
 			g.setColor(Color.GREEN);
-			g.fillRect(x, y, iTILE_SIZE, iTILE_SIZE);
+			g.fillRect(iX, iY, iTILE_SIZE, iTILE_SIZE);
 			break;
 			
 		/*
@@ -227,7 +227,7 @@ public class BoardPanel extends JPanel {
 		case SnakeHead:
 			//Fill the tile in with green.
 			g.setColor(Color.GREEN);
-			g.fillRect(x, y, iTILE_SIZE, iTILE_SIZE);
+			g.fillRect(iX, iY, iTILE_SIZE, iTILE_SIZE);
 			
 			//Set the color to black so that we can start drawing the eyes.
 			g.setColor(Color.BLACK);
@@ -259,32 +259,32 @@ public class BoardPanel extends JPanel {
 			 * directions.
 			 * 
 			 */
-			switch(game.getDirection()) {
+			switch(snkGame.getDirection()) {
 			case North: {
-				int baseY = y + EYE_SMALL_INSET;
-				g.drawLine(x + EYE_LARGE_INSET, baseY, x + EYE_LARGE_INSET, baseY + EYE_LENGTH);
-				g.drawLine(x + iTILE_SIZE - EYE_LARGE_INSET, baseY, x + iTILE_SIZE - EYE_LARGE_INSET, baseY + EYE_LENGTH);
+				int baseY = iY + iEYE_SMALL_INSET;
+				g.drawLine(iX + iEYE_LARGE_INSET, baseY, iX + iEYE_LARGE_INSET, baseY + iEYE_LENGTH);
+				g.drawLine(iX + iTILE_SIZE - iEYE_LARGE_INSET, baseY, iX + iTILE_SIZE - iEYE_LARGE_INSET, baseY + iEYE_LENGTH);
 				break;
 			}
 				
 			case South: {
-				int baseY = y + iTILE_SIZE - EYE_SMALL_INSET;
-				g.drawLine(x + EYE_LARGE_INSET, baseY, x + EYE_LARGE_INSET, baseY - EYE_LENGTH);
-				g.drawLine(x + iTILE_SIZE - EYE_LARGE_INSET, baseY, x + iTILE_SIZE - EYE_LARGE_INSET, baseY - EYE_LENGTH);
+				int baseY = iY + iTILE_SIZE - iEYE_SMALL_INSET;
+				g.drawLine(iX + iEYE_LARGE_INSET, baseY, iX + iEYE_LARGE_INSET, baseY - iEYE_LENGTH);
+				g.drawLine(iX + iTILE_SIZE - iEYE_LARGE_INSET, baseY, iX + iTILE_SIZE - iEYE_LARGE_INSET, baseY - iEYE_LENGTH);
 				break;
 			}
 			
 			case West: {
-				int baseX = x + EYE_SMALL_INSET;
-				g.drawLine(baseX, y + EYE_LARGE_INSET, baseX + EYE_LENGTH, y + EYE_LARGE_INSET);
-				g.drawLine(baseX, y + iTILE_SIZE - EYE_LARGE_INSET, baseX + EYE_LENGTH, y + iTILE_SIZE - EYE_LARGE_INSET);
+				int baseX = iX + iEYE_SMALL_INSET;
+				g.drawLine(baseX, iY + iEYE_LARGE_INSET, baseX + iEYE_LENGTH, iY + iEYE_LARGE_INSET);
+				g.drawLine(baseX, iY + iTILE_SIZE - iEYE_LARGE_INSET, baseX + iEYE_LENGTH, iY + iTILE_SIZE - iEYE_LARGE_INSET);
 				break;
 			}
 				
 			case East: {
-				int baseX = x + iTILE_SIZE - EYE_SMALL_INSET;
-				g.drawLine(baseX, y + EYE_LARGE_INSET, baseX - EYE_LENGTH, y + EYE_LARGE_INSET);
-				g.drawLine(baseX, y + iTILE_SIZE - EYE_LARGE_INSET, baseX - EYE_LENGTH, y + iTILE_SIZE - EYE_LARGE_INSET);
+				int baseX = iX + iTILE_SIZE - iEYE_SMALL_INSET;
+				g.drawLine(baseX, iY + iEYE_LARGE_INSET, baseX - iEYE_LENGTH, iY + iEYE_LARGE_INSET);
+				g.drawLine(baseX, iY + iTILE_SIZE - iEYE_LARGE_INSET, baseX - iEYE_LENGTH, iY + iTILE_SIZE - iEYE_LARGE_INSET);
 				break;
 			}
 			
