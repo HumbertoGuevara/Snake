@@ -226,6 +226,16 @@ public class BoardPanel extends JPanel {
                 g.setColor(Color.RED);
                 g.fillOval(iX + 2, iY + 2, iTILE_SIZE - 4, iTILE_SIZE - 4);
                 break;
+                
+            case Fruit2:
+                g.setColor(Color.BLUE);
+                g.fillOval(iX + 2, iY + 2, iTILE_SIZE - 4, iTILE_SIZE - 4);
+                break;
+                
+            case Fruit3:
+                g.setColor(Color.YELLOW);
+                g.fillOval(iX + 2, iY + 2, iTILE_SIZE - 4, iTILE_SIZE - 4);
+                break;
 
             /*
 		 * The snake body is depicted as a green square that takes up the
@@ -331,6 +341,12 @@ public class BoardPanel extends JPanel {
                 case Venom:
                     iarrSalida[iC] = 4;
                     break;
+                case Fruit2:
+                    iarrSalida[iC] = 5;
+                    break;
+                case Fruit3:
+                    iarrSalida[iC] = 6;
+                    break;
                     
             }
             }
@@ -355,6 +371,12 @@ public class BoardPanel extends JPanel {
                     break;
                 case 4:
                     tltTiles[iC] = TileType.Venom;
+                    break;
+                case 5:
+                    tltTiles[iC] = TileType.Fruit2;
+                    break;
+                case 6:
+                    tltTiles[iC] = TileType.Fruit3;
                     break;
             }
         }

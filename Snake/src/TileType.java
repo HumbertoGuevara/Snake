@@ -13,6 +13,10 @@ public enum TileType {
 	
 	SnakeBody,
         
-        Venom
-	
+        Venom,
+        
+        Fruit2,
+        
+        Fruit3
+        
 }

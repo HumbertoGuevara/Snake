@@ -100,6 +100,11 @@ public class SnakeGame extends JFrame {
      * The number of points that the next fruit will award us.
      */
     private int iNextFruitScore;
+    
+    /**
+     * The amount the Snake will increase depending on the fruit.
+     */
+    private int contadorFruitSnake;
 
     /**
      * Creates a new SnakeGame instance. Creates a new window, and sets up the
@@ -326,8 +331,22 @@ public class SnakeGame extends JFrame {
         if (tltCollision == TileType.Fruit) {
             iFruitsEaten++;
             iScore += iNextFruitScore;
+            contadorFruitSnake = 2;
             spawnFruit();
-        } else if (tltCollision == TileType.SnakeBody
+        } else if (tltCollision == TileType.Fruit2) {
+            iFruitsEaten++;
+            iScore += iNextFruitScore;
+            contadorFruitSnake = 3;
+            spawnFruit2();
+        } else if (tltCollision == TileType.Fruit3) {
+            iFruitsEaten++;
+            iScore += iNextFruitScore;
+            contadorFruitSnake = 1;
+            spawnFruit3();
+        } 
+        
+        
+        else if (tltCollision == TileType.SnakeBody
                 ||tltCollision==TileType.Venom) {
             bIsGameOver = true;
             clkLogicTimer.setPaused(true);
@@ -393,8 +412,8 @@ public class SnakeGame extends JFrame {
 		 * to prevent a false game over.
          */
         TileType tltOld = bpnBoard.getTile(pntHead.x, pntHead.y);
-        if (tltOld != TileType.Fruit && tltOld != TileType.Venom && 
-                lklSnake.size() > iMIN_SNAKE_LENGTH) {
+        if (tltOld != TileType.Fruit && tltOld != TileType.Fruit2 && tltOld != TileType.Fruit3
+                && --contadorFruitSnake < 1 && tltOld != TileType.Venom && lklSnake.size() > iMIN_SNAKE_LENGTH) {
             Point tail = lklSnake.removeLast();
             bpnBoard.setTile(tail, null);
             tltOld = bpnBoard.getTile(pntHead.x, pntHead.y);
@@ -433,7 +452,11 @@ public class SnakeGame extends JFrame {
          */
         this.iScore = 0;
         this.iFruitsEaten = 0;
-
+        
+        /*
+		 * Reset the amount of places the snake will move
+         */
+        this.contadorFruitSnake = 0;
         /*
 		 * Reset both the new game and game over flags.
          */
@@ -473,6 +496,8 @@ public class SnakeGame extends JFrame {
 		 * Spawn a new fruit.
          */
         spawnFruit();
+        spawnFruit2();
+        spawnFruit3();
         spawnBad();
     }
 
@@ -533,6 +558,76 @@ public class SnakeGame extends JFrame {
                 if (type == null || type == TileType.Fruit) {
                     if (++freeFound == index) {
                         bpnBoard.setTile(x, y, TileType.Fruit);
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+    
+        private void spawnFruit2() {
+        //Reset the score for this fruit to 100.
+        this.iNextFruitScore = 100;
+
+        /*
+		 * Get a random index based on the number of free spaces left on the board.
+         */
+        int index = ranRandom.nextInt(BoardPanel.iCOL_COUNT
+                * BoardPanel.iROW_COUNT - lklSnake.size());
+
+        /*
+		 * While we could just as easily choose a random index on the board
+		 * and check it if it's free until we find an empty one, that method
+		 * tends to hang if the snake becomes very large.
+		 * 
+		 * This method simply loops through until it finds the nth free index
+		 * and selects uses that. This means that the game will be able to
+		 * locate an index at a relatively constant rate regardless of the
+		 * size of the snake.
+         */
+        int freeFound = -1;
+        for (int x = 0; x < BoardPanel.iCOL_COUNT; x++) {
+            for (int y = 0; y < BoardPanel.iROW_COUNT; y++) {
+                TileType type = bpnBoard.getTile(x, y);
+                if (type == null || type == TileType.Fruit2) {
+                    if (++freeFound == index) {
+                        bpnBoard.setTile(x, y, TileType.Fruit2);
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+        
+        private void spawnFruit3() {
+        //Reset the score for this fruit to 100.
+        this.iNextFruitScore = 100;
+
+        /*
+		 * Get a random index based on the number of free spaces left on the board.
+         */
+        int index = ranRandom.nextInt(BoardPanel.iCOL_COUNT
+                * BoardPanel.iROW_COUNT - lklSnake.size());
+
+        /*
+		 * While we could just as easily choose a random index on the board
+		 * and check it if it's free until we find an empty one, that method
+		 * tends to hang if the snake becomes very large.
+		 * 
+		 * This method simply loops through until it finds the nth free index
+		 * and selects uses that. This means that the game will be able to
+		 * locate an index at a relatively constant rate regardless of the
+		 * size of the snake.
+         */
+        int freeFound = -1;
+        for (int x = 0; x < BoardPanel.iCOL_COUNT; x++) {
+            for (int y = 0; y < BoardPanel.iROW_COUNT; y++) {
+                TileType type = bpnBoard.getTile(x, y);
+                if (type == null || type == TileType.Fruit3) {
+                    if (++freeFound == index) {
+                        bpnBoard.setTile(x, y, TileType.Fruit3);
                         break;
                     }
                 }
