@@ -753,6 +753,7 @@ public class SnakeGame extends JFrame {
     public void Cargar(){
         
         String sUser = entradaUsuario();
+        if(sUser != null){
         String sValida = validar(sUser);
         try{
             RandomAccessFile rafEntrada;
@@ -764,16 +765,19 @@ public class SnakeGame extends JFrame {
             {
                 Cargar(offset);
             }
-            if(bIsGameOver){
-                clkLogicTimer.setPaused(true);
-            }
+            
             rafEntrada.close();
             }catch(Exception e){
             System.out.println(e);
         }
+        }
+        if(bIsGameOver){
+                clkLogicTimer.setPaused(true);
+        }
     }
     public void Guardar(){
         String sUser = entradaUsuario();
+        if(sUser != null){
         String sValida = validar(sUser);
         RandomAccessFile rafSalida;
         try{
@@ -803,13 +807,15 @@ public class SnakeGame extends JFrame {
                       }
                 }
             }
-            if(bIsGameOver){ //para evitar que la snake siga caminando
-                clkLogicTimer.setPaused(true);
-            }
+            
             rafSalida.close();
         }catch(Exception e){
             System.out.println(e);
         }
+    }
+        if(bIsGameOver){ //para evitar que la snake siga caminando
+                clkLogicTimer.setPaused(true);
+            }
     }
     public void nuevoRegistro(RandomAccessFile rafSalida, String sValida)
             throws IOException{
