@@ -606,13 +606,11 @@ public class SnakeGame extends JFrame {
         private void spawnFruit3() {
         //Reset the score for this fruit to 100.
         this.iNextFruitScore = 100;
-
         /*
 		 * Get a random index based on the number of free spaces left on the board.
          */
         int index = ranRandom.nextInt(BoardPanel.iCOL_COUNT
                 * BoardPanel.iROW_COUNT - lklSnake.size());
-
         /*
 		 * While we could just as easily choose a random index on the board
 		 * and check it if it's free until we find an empty one, that method
@@ -644,13 +642,11 @@ public class SnakeGame extends JFrame {
         //se agrega un tyle del tipo Venom
         //ademas se modifica para que se agreguen 3 de estos 
         //objetos malos
-       
             /*
-	* Get a random index based on the number of free spaces left on the board.
+                * Get a random index based on the number of free spaces left on the board.
              */
             int index = ranRandom.nextInt(BoardPanel.iCOL_COUNT
                     * BoardPanel.iROW_COUNT - lklSnake.size());
-
             int freeFound = -1;
             for (int x = 0; x < BoardPanel.iCOL_COUNT; x++) {
                 for (int y = 0; y < BoardPanel.iROW_COUNT; y++) {
@@ -837,6 +833,11 @@ public class SnakeGame extends JFrame {
             System.out.println("guardar: "+e);
         }
     }
+    /*
+    Funcion que almacena la snake en el archivo de salida
+    rellena tantos valores dummy como sea necesario para mantener un
+    tamaño de registro fijo entre los usuarios
+    */
     public void guardarSnake(RandomAccessFile rafSalida)throws IOException{
          //almacenar las coordenadas de la snake
         rafSalida.writeInt(lklSnake.size());
@@ -854,6 +855,9 @@ public class SnakeGame extends JFrame {
             rafSalida.writeInt(-1);
         }
     }
+    /*
+    Funcion guardarDirecciones, funciona idem a guardar Snake
+    */
     public void guardarDirecciones(RandomAccessFile rafSalida)throws IOException{
         //guardar direcciones de la snake
          rafSalida.writeInt(lklDirections.size());
@@ -879,6 +883,10 @@ public class SnakeGame extends JFrame {
             rafSalida.writeInt(-1); //esto tiene como objetivo mantener una
         }//cantidad fija de bytes por guardado, para facilitar las cosas
     }
+    /*
+    Funcion tablero, toma una representacion de integers del tablero
+    y lo guarda en el archivo de salida
+    */
     public void guardarTablero(RandomAccessFile rafSalida)throws IOException{
         //se guarda el tablero actual traducido a un arreglo de enteros
         int iarrTablero[] = bpnBoard.getTablero();
@@ -893,10 +901,12 @@ public class SnakeGame extends JFrame {
      * 
      */
     public void Cargar(long offset){
-        this.resetGame();
+        this.resetGame();//se reinicia el juego para evitar bugs raros
         RandomAccessFile rafEntrada;
         try{
+            //abrir el archivo de entrada
             rafEntrada = new RandomAccessFile("datos.dat","rw");
+            //moverse hasta el registro especificado
             rafEntrada.seek(offset);
         //primero se cargan las variables de estado
         this.iScore = rafEntrada.readInt();
@@ -905,15 +915,22 @@ public class SnakeGame extends JFrame {
         this.bIsNewGame = rafEntrada.readBoolean();
         this.bIsPaused = rafEntrada.readBoolean();
         this.bIsGameOver = rafEntrada.readBoolean();
+        //cargar la snake del registro
         cargarSnake(rafEntrada);
+        //se cargan las direcciones almacenadas hasta ahora
         cargarDirecciones(rafEntrada);
+        //se carga el tablero del registro
         cargarTablero(rafEntrada);
-        rafEntrada.close();
+        rafEntrada.close();//cerrar el archivo de entrada
         }catch(Exception e){
             System.out.println(e);
         }
         
     }
+    /*
+    Para modularizar se carga la snake en una funcion separada
+    descarta los valores dummy almacenados en el registro
+    */
     public void cargarSnake(RandomAccessFile rafEntrada)throws IOException{
           //cargar la serpiente
         lklSnake.clear();
@@ -931,6 +948,10 @@ public class SnakeGame extends JFrame {
             iDummy = rafEntrada.readInt();
         }
     }
+    /*
+    la funcion de cargar direcciones funciona IDEM a cargar snake
+    tambien se deshace de valores dummy
+    */
     public void cargarDirecciones(RandomAccessFile rafEntrada)throws IOException{
         //cargar las direcciones
         int iElementos;
@@ -958,6 +979,10 @@ public class SnakeGame extends JFrame {
             int iDummy = rafEntrada.readInt();
         }
     }
+    /*
+    Se carga el tablero del registro, para esto se lee una serie de ints
+    que representan al tablero y se guardan en un arreglo de ints
+    */
     public void cargarTablero(RandomAccessFile rafEntrada)throws IOException{
         int iElementos;
         //cargar el tablero 
@@ -966,7 +991,10 @@ public class SnakeGame extends JFrame {
         for(int iC=0;iC<iElementos;iC++){
             iArrTablero[iC] = rafEntrada.readInt();
         }
+        
         bpnBoard.setTablero(iArrTablero);
+        //se reinicia el logic timer,
+        //esto está aqui para no pasarse de las 25 lineas......
         clkLogicTimer.reset();
         if(bIsPaused){
             clkLogicTimer.setPaused(true);
