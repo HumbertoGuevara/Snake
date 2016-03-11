@@ -764,6 +764,9 @@ public class SnakeGame extends JFrame {
             {
                 Cargar(offset);
             }
+            if(bIsGameOver){
+                clkLogicTimer.setPaused(true);
+            }
             rafEntrada.close();
             }catch(Exception e){
             System.out.println(e);
@@ -800,7 +803,7 @@ public class SnakeGame extends JFrame {
                       }
                 }
             }
-            if(bIsGameOver){
+            if(bIsGameOver){ //para evitar que la snake siga caminando
                 clkLogicTimer.setPaused(true);
             }
             rafSalida.close();
