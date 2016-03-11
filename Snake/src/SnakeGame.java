@@ -122,6 +122,11 @@ public class SnakeGame extends JFrame {
      * Variable para saber si el juego esta muteado.
      */
     private boolean bMuteado; 
+    
+        /**
+     * Variable para saber si el juego ya esta muteado.
+     */
+    private boolean bisMuteado;
 
     /**
      * Creates a new SnakeGame instance. Creates a new window, and sets up the
@@ -154,6 +159,7 @@ public class SnakeGame extends JFrame {
 	*/
         bPausado = false;
         bMuteado = false;
+        bisMuteado = true;
         
         
         /*
@@ -249,15 +255,17 @@ public class SnakeGame extends JFrame {
                         if (!bIsGameOver) {
                             bIsPaused = !bIsPaused;
                             clkLogicTimer.setPaused(bIsPaused);
+                            if(bisMuteado)
+                            {
                             if(bPausado)
                             {
                                 SClipFondo.unpause();
-                                bPausado = false;
                             }
                             else
                             {
                                 SClipFondo.pause();
-                                bPausado = true;
+                            }
+                            bPausado = !bPausado;
                             }
                         }
                         break;
@@ -267,17 +275,20 @@ public class SnakeGame extends JFrame {
                     */
                         
                     case KeyEvent.VK_M:
+
                         if(bMuteado)
                         {
                         SClipFondo.stop();
-                        bMuteado = !bMuteado;
+                        bisMuteado = false;
                         }
                         else
                         {
                         SClipFondo.setLooping(true);
                         SClipFondo.play();
-                        bMuteado = !bMuteado;
+                        bisMuteado = true;
                         }
+                        bMuteado = !bMuteado;
+                        
                         break;
 
                     /*
