@@ -645,6 +645,7 @@ public class SnakeGame extends JFrame {
             /*
                 * Get a random index based on the number of free spaces left on the board.
              */
+            for(int iI=0;iI<3;iI++){
             int index = ranRandom.nextInt(BoardPanel.iCOL_COUNT
                     * BoardPanel.iROW_COUNT - lklSnake.size());
             int freeFound = -1;
@@ -659,7 +660,7 @@ public class SnakeGame extends JFrame {
                     }
                 }
             }
-        
+            }
     }
 
     /**
