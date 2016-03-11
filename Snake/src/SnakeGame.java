@@ -107,6 +107,21 @@ public class SnakeGame extends JFrame {
      * The amount the Snake will increase depending on the fruit.
      */
     private int contadorFruitSnake;
+    
+    /**
+     * Variable que controla el sonido de fondo.
+     */
+    private SoundClip SClipFondo; 
+ 
+    /**
+     * Variable para saber si el juego esta pausado.
+     */
+    private boolean bPausado; 
+    
+    /**
+     * Variable para saber si el juego esta muteado.
+     */
+    private boolean bMuteado; 
 
     /**
      * Creates a new SnakeGame instance. Creates a new window, and sets up the
@@ -127,6 +142,20 @@ public class SnakeGame extends JFrame {
         add(bpnBoard, BorderLayout.CENTER);
         add(spnSide, BorderLayout.EAST);
 
+        /*
+	 * Add the background sound. 
+	*/
+        SClipFondo = new SoundClip("Fondo.wav");
+        SClipFondo.setLooping(true);
+        SClipFondo.play();
+        
+        /*
+	 * Inicializo en false los boleanos que revisan el pausado y muteado. 
+	*/
+        bPausado = false;
+        bMuteado = false;
+        
+        
         /*
 		 * Adds a new key listener to the frame to process input. 
          */
@@ -220,6 +249,34 @@ public class SnakeGame extends JFrame {
                         if (!bIsGameOver) {
                             bIsPaused = !bIsPaused;
                             clkLogicTimer.setPaused(bIsPaused);
+                            if(bPausado)
+                            {
+                                SClipFondo.unpause();
+                                bPausado = false;
+                            }
+                            else
+                            {
+                                SClipFondo.pause();
+                                bPausado = true;
+                            }
+                        }
+                        break;
+                       
+                    /*          
+                       * Opcion que puede usar el usuario si quiere mutear el sonido.
+                    */
+                        
+                    case KeyEvent.VK_M:
+                        if(bMuteado)
+                        {
+                        SClipFondo.stop();
+                        bMuteado = !bMuteado;
+                        }
+                        else
+                        {
+                        SClipFondo.setLooping(true);
+                        SClipFondo.play();
+                        bMuteado = !bMuteado;
                         }
                         break;
 
