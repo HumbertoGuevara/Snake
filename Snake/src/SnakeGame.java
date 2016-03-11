@@ -786,8 +786,22 @@ public class SnakeGame extends JFrame {
                 if(offset == -1){
                     nuevoRegistro(rafSalida,sValida);
                 }else{
-                    Guardar(offset);
+                      bIsPaused = true;
+                    clkLogicTimer.setPaused(bIsPaused);
+                    int n = JOptionPane.showConfirmDialog(
+                            this,
+                            "Would you like to overwrite this user?",
+                            "r u sure?",
+                            JOptionPane.YES_NO_OPTION);
+                      bIsPaused = false;
+                      clkLogicTimer.setPaused(bIsPaused);
+                      if(n==0){
+                            Guardar(offset);
+                      }
                 }
+            }
+            if(bIsGameOver){
+                clkLogicTimer.setPaused(true);
             }
             rafSalida.close();
         }catch(Exception e){
@@ -828,6 +842,7 @@ public class SnakeGame extends JFrame {
        guardarDirecciones(rafSalida);
         //almacenar el tablero
         guardarTablero(rafSalida);
+        
         rafSalida.close();
         }catch(Exception e){
             System.out.println("guardar: "+e);
@@ -996,7 +1011,8 @@ public class SnakeGame extends JFrame {
         //se reinicia el logic timer,
         //esto está aqui para no pasarse de las 25 lineas......
         clkLogicTimer.reset();
-        if(bIsPaused){
+        ;
+        if(bIsPaused||bIsGameOver){
             clkLogicTimer.setPaused(true);
         }
     }
