@@ -355,6 +355,7 @@ public class BoardPanel extends JPanel {
     }
     public void setTablero(int[] iArrEntrada){
         tltTiles = new TileType[iArrEntrada.length];
+        this.clearBoard();
         for(int iC=0;iC<iArrEntrada.length;iC++){
             switch(iArrEntrada[iC]){
                 case -1:

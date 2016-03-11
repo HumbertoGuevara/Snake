@@ -3,11 +3,13 @@ import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.LinkedList;
 import java.util.Random;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  * The {@code SnakeGame} class is responsible for handling much of the game's
@@ -642,7 +644,7 @@ public class SnakeGame extends JFrame {
         //se agrega un tyle del tipo Venom
         //ademas se modifica para que se agreguen 3 de estos 
         //objetos malos
-        for (int iC = 0; iC < 3; iC++) {
+       
             /*
 	* Get a random index based on the number of free spaces left on the board.
              */
@@ -661,7 +663,7 @@ public class SnakeGame extends JFrame {
                     }
                 }
             }
-        }
+        
     }
 
     /**
@@ -699,15 +701,124 @@ public class SnakeGame extends JFrame {
     public Direction getDirection() {
         return lklDirections.peek();
     }
+    private String validar(String sEntrada){
+        String sSalida = "";
+        if(sEntrada.length()<20){
+            for(int iI=0;iI<sEntrada.length();iI++){
+                sSalida+=sEntrada.charAt(iI);
+            }
+            for(int iI=sEntrada.length();iI<20;iI++){
+                sSalida+=" ";
+            }
+        }else if(sEntrada.length()>20){
+            for(int iI=0;iI<20;iI++){
+                sSalida += sEntrada.charAt(iI);
+            }
+        }
+        return sSalida;
+    }
+    public String entradaUsuario(){
+        bIsPaused = true;
+        clkLogicTimer.setPaused(bIsPaused);
+        String sUser = (String)JOptionPane.showInputDialog(
+                    this,
+                    "Enter your username to load",
+                    "Load",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    "Username");
+        bIsPaused = false;
+        clkLogicTimer.setPaused(bIsPaused);
+        return sUser;
+    }
+    public void userNotFound(){
+        bIsPaused = !bIsPaused;
+            clkLogicTimer.setPaused(bIsPaused);
+            JOptionPane.showMessageDialog(this, "User Not Found");
+             bIsPaused = !bIsPaused;
+            clkLogicTimer.setPaused(bIsPaused);
+    }
+    public long buscarUsuario(String sValida,RandomAccessFile rafEntrada)
+    throws IOException{
+        while(rafEntrada.getFilePointer()<rafEntrada.length()){
+                String sGuardado = "";
+                for(int iI=0;iI<20;iI++){
+                    sGuardado+=rafEntrada.readChar();
+                }
+                if(sGuardado.equals(sValida)){
+                    return rafEntrada.readLong();
+                }else{
+                    long lDummy = rafEntrada.readLong();
+                }
+            }
+        return -1;
+    }
+    public void Cargar(){
+        
+        String sUser = entradaUsuario();
+        String sValida = validar(sUser);
+        try{
+            RandomAccessFile rafEntrada;
+            rafEntrada = new RandomAccessFile("users.dat","rw");
+            long offset = buscarUsuario(sValida,rafEntrada);
+            if(offset == -1){
+             userNotFound();
+            }else
+            {
+                Cargar(offset);
+            }
+            rafEntrada.close();
+            }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+    public void Guardar(){
+        String sUser = entradaUsuario();
+        String sValida = validar(sUser);
+        RandomAccessFile rafSalida;
+        try{
+            rafSalida = new RandomAccessFile("users.dat","rw");
+            if(rafSalida.length()==0){
+                for(int iI=0;iI<20;iI++){
+                    rafSalida.writeChar(sValida.charAt(iI));
+                }
+                rafSalida.writeLong(0);
+                Guardar(0);
+            }else{
+                long offset = buscarUsuario(sValida,rafSalida);
+                if(offset == -1){
+                    nuevoRegistro(rafSalida,sValida);
+                }else{
+                    Guardar(offset);
+                }
+            }
+            rafSalida.close();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+    public void nuevoRegistro(RandomAccessFile rafSalida, String sValida)
+            throws IOException{
+        long offset;
+        for(int iI=0;iI<20;iI++){
+                        rafSalida.writeChar(sValida.charAt(iI));
+                    }
+                    int cantidad = (int) rafSalida.length()/48;
+                    offset = 10027*cantidad;
+                    rafSalida.writeLong(offset);
+                    Guardar(offset);
+    }
     /**
      * Funcion de guardar
      * toma el estado actual del juego y lo guarda en un archivo de acceso
      * aelatorio para poder cargarlo después
      */
-    public void Guardar(){
+    public void Guardar(long offset){
         try{
         RandomAccessFile rafSalida;
         rafSalida = new RandomAccessFile("datos.dat","rw");
+        rafSalida.seek(offset);
         //almacenar las variables del funcionamiento del juego
         rafSalida.writeInt(iScore);
         rafSalida.writeInt(iFruitsEaten);
@@ -715,17 +826,40 @@ public class SnakeGame extends JFrame {
         rafSalida.writeBoolean(bIsNewGame);
         rafSalida.writeBoolean(bIsPaused);
         rafSalida.writeBoolean(bIsGameOver);
-        //almacenar las coordenadas de la snake
+        //se guarda la snake como tal en el archivo
+        guardarSnake(rafSalida);
+        //almacenar las direcciones de la snake
+       guardarDirecciones(rafSalida);
+        //almacenar el tablero
+        guardarTablero(rafSalida);
+        rafSalida.close();
+        }catch(Exception e){
+            System.out.println("guardar: "+e);
+        }
+    }
+    public void guardarSnake(RandomAccessFile rafSalida)throws IOException{
+         //almacenar las coordenadas de la snake
         rafSalida.writeInt(lklSnake.size());
         for(int iC=0;iC<lklSnake.size();iC++){
             rafSalida.writeInt(lklSnake.get(iC).x);
             rafSalida.writeInt(lklSnake.get(iC).y);
         }
-        //almacenar las direcciones de la snake
-        rafSalida.writeInt(lklDirections.size());
+        /*
+        se agregan valores dummy, esto tiene como objetivo que los "registros"
+        entre todos los usuarios tengan exactamente la misma cantidad de bytes
+        */
+        for(int iC = lklSnake.size(); iC 
+                < bpnBoard.iCOL_COUNT*bpnBoard.iROW_COUNT;iC++){
+            rafSalida.writeInt(-1); 
+            rafSalida.writeInt(-1);
+        }
+    }
+    public void guardarDirecciones(RandomAccessFile rafSalida)throws IOException{
+        //guardar direcciones de la snake
+         rafSalida.writeInt(lklDirections.size());
         for(int iC=0;iC<lklDirections.size();iC++){
             Direction dirTemp = lklDirections.get(iC);
-            switch(dirTemp){
+            switch(dirTemp){//se traduce cada direccion a un integer
                 case North:
                     rafSalida.writeInt(1);
                     break;
@@ -737,19 +871,20 @@ public class SnakeGame extends JFrame {
                     break;
                 case West:
                     rafSalida.writeInt(4);
-                    break;
-                    
+                    break;     
             }
         }
-        //almacenar el tablero
+        for(int iC = lklDirections.size(); iC //llenamos de valores dummy
+                < bpnBoard.iCOL_COUNT*bpnBoard.iROW_COUNT;iC++){
+            rafSalida.writeInt(-1); //esto tiene como objetivo mantener una
+        }//cantidad fija de bytes por guardado, para facilitar las cosas
+    }
+    public void guardarTablero(RandomAccessFile rafSalida)throws IOException{
+        //se guarda el tablero actual traducido a un arreglo de enteros
         int iarrTablero[] = bpnBoard.getTablero();
         rafSalida.writeInt(iarrTablero.length);
         for(int iC=0;iC<iarrTablero.length;iC++){
             rafSalida.writeInt(iarrTablero[iC]);
-        }
-        rafSalida.close();
-        }catch(Exception e){
-            System.out.println(e);
         }
     }
     /**
@@ -757,10 +892,12 @@ public class SnakeGame extends JFrame {
      * Toma el archivo de guardado y lo carga en el estado actual del juego
      * 
      */
-    public void Cargar(){
+    public void Cargar(long offset){
+        this.resetGame();
         RandomAccessFile rafEntrada;
         try{
             rafEntrada = new RandomAccessFile("datos.dat","rw");
+            rafEntrada.seek(offset);
         //primero se cargan las variables de estado
         this.iScore = rafEntrada.readInt();
         this.iFruitsEaten = rafEntrada.readInt();
@@ -768,7 +905,17 @@ public class SnakeGame extends JFrame {
         this.bIsNewGame = rafEntrada.readBoolean();
         this.bIsPaused = rafEntrada.readBoolean();
         this.bIsGameOver = rafEntrada.readBoolean();
-        //cargar la serpiente
+        cargarSnake(rafEntrada);
+        cargarDirecciones(rafEntrada);
+        cargarTablero(rafEntrada);
+        rafEntrada.close();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        
+    }
+    public void cargarSnake(RandomAccessFile rafEntrada)throws IOException{
+          //cargar la serpiente
         lklSnake.clear();
         int iElementos = rafEntrada.readInt();
         for(int iC=0;iC<iElementos;iC++){
@@ -777,7 +924,16 @@ public class SnakeGame extends JFrame {
             Point pntTemp = new Point(iX,iY);
             lklSnake.add(pntTemp);
         }
+        //se leen los valores dummy almacenados, estos no se usan para nada
+        //son solo relleno
+        for(int iC = iElementos;iC<bpnBoard.iCOL_COUNT*bpnBoard.iROW_COUNT;iC++){
+            int iDummy = rafEntrada.readInt();
+            iDummy = rafEntrada.readInt();
+        }
+    }
+    public void cargarDirecciones(RandomAccessFile rafEntrada)throws IOException{
         //cargar las direcciones
+        int iElementos;
         iElementos = rafEntrada.readInt();
         lklDirections.clear();
         for(int iC=0;iC<iElementos;iC++){
@@ -797,6 +953,13 @@ public class SnakeGame extends JFrame {
                     break;
             }
         }
+        //se leen los valores dummy, son solo relleno
+        for(int iC = iElementos;iC<bpnBoard.iCOL_COUNT*bpnBoard.iROW_COUNT;iC++){
+            int iDummy = rafEntrada.readInt();
+        }
+    }
+    public void cargarTablero(RandomAccessFile rafEntrada)throws IOException{
+        int iElementos;
         //cargar el tablero 
         iElementos = rafEntrada.readInt();
         int iArrTablero[] = new int[iElementos];
@@ -808,11 +971,6 @@ public class SnakeGame extends JFrame {
         if(bIsPaused){
             clkLogicTimer.setPaused(true);
         }
-        rafEntrada.close();
-        }catch(Exception e){
-            System.out.println(e);
-        }
-        
     }
     /**
      * Entry point of the program.
