@@ -863,7 +863,7 @@ public class SnakeGame extends JFrame {
         String sUser = (String)JOptionPane.showInputDialog(
                     this,
                     "Enter your username to " +sFunc,
-                    "Load",
+                    sFunc,
                     JOptionPane.PLAIN_MESSAGE,
                     null,
                     null,
