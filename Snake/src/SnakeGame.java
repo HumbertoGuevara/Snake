@@ -112,7 +112,13 @@ public class SnakeGame extends JFrame {
      * Variable que controla el sonido de fondo.
      */
     private SoundClip SClipFondo; 
- 
+    
+    //variable del sonido de comer una frutita
+    private SoundClip sClipEat;
+    
+    //variable de chocar con algo malo o una pared
+    
+    private SoundClip sClipDead;
     /**
      * Variable para saber si el juego esta pausado.
      */
@@ -153,7 +159,9 @@ public class SnakeGame extends JFrame {
         SClipFondo = new SoundClip("Fondo.wav");
         SClipFondo.setLooping(true);
         SClipFondo.play();
-        
+        //inicializar los otros sonidos útiles
+        this.sClipEat = new SoundClip("eat.wav");
+        this.sClipDead = new SoundClip("dead.wav");
         /*
 	 * Inicializo en false los boleanos que revisan el pausado y muteado. 
 	*/
@@ -403,23 +411,29 @@ public class SnakeGame extends JFrame {
             iScore += iNextFruitScore;
             contadorFruitSnake = 2;
             spawnFruit();
+            sClipEat.play();
         } else if (tltCollision == TileType.Fruit2) {
             iFruitsEaten++;
             iScore += iNextFruitScore;
             contadorFruitSnake = 3;
             spawnFruit2();
+            sClipEat.play();
         } else if (tltCollision == TileType.Fruit3) {
             iFruitsEaten++;
             iScore += iNextFruitScore;
             contadorFruitSnake = 1;
             spawnFruit3();
+            sClipEat.play();
         } 
         
         
         else if (tltCollision == TileType.SnakeBody
                 ||tltCollision==TileType.Venom) {
             bIsGameOver = true;
+            sClipDead.play();
             clkLogicTimer.setPaused(true);
+            bPausado = true;
+            this.SClipFondo.stop();
         } else if (iNextFruitScore > 10) {
             iNextFruitScore--;
         }
@@ -569,7 +583,13 @@ public class SnakeGame extends JFrame {
         spawnFruit2();
         spawnFruit3();
         spawnBad();
-    }
+        
+        //restart the sound
+        this.bPausado = false;
+        this.SClipFondo.setLooping(true);
+        this.SClipFondo.play();
+        }
+    
 
     /**
      * Gets the flag that indicates whether or not we're playing a new game.
@@ -783,8 +803,7 @@ public class SnakeGame extends JFrame {
         return sSalida;
     }
     public String entradaUsuario(){
-        bIsPaused = true;
-        clkLogicTimer.setPaused(bIsPaused);
+        clkLogicTimer.setPaused(true);
         String sUser = (String)JOptionPane.showInputDialog(
                     this,
                     "Enter your username to load",
@@ -793,16 +812,14 @@ public class SnakeGame extends JFrame {
                     null,
                     null,
                     "Username");
-        bIsPaused = false;
-        clkLogicTimer.setPaused(bIsPaused);
+        clkLogicTimer.setPaused(false);
         return sUser;
     }
     public void userNotFound(){
-        bIsPaused = !bIsPaused;
-            clkLogicTimer.setPaused(bIsPaused);
+        
+            clkLogicTimer.setPaused(true);
             JOptionPane.showMessageDialog(this, "User Not Found");
-             bIsPaused = !bIsPaused;
-            clkLogicTimer.setPaused(bIsPaused);
+            clkLogicTimer.setPaused(false);
     }
     public long buscarUsuario(String sValida,RandomAccessFile rafEntrada)
     throws IOException{
@@ -840,8 +857,10 @@ public class SnakeGame extends JFrame {
             System.out.println(e);
         }
         }
-        if(bIsGameOver){
+        if(bIsPaused||bIsGameOver){
                 clkLogicTimer.setPaused(true);
+                SClipFondo.pause();
+                this.bPausado=true;
         }
     }
     public void Guardar(){
@@ -862,15 +881,14 @@ public class SnakeGame extends JFrame {
                 if(offset == -1){
                     nuevoRegistro(rafSalida,sValida);
                 }else{
-                      bIsPaused = true;
-                    clkLogicTimer.setPaused(bIsPaused);
+                    clkLogicTimer.setPaused(true);
                     int n = JOptionPane.showConfirmDialog(
                             this,
                             "Would you like to overwrite this user?",
                             "r u sure?",
                             JOptionPane.YES_NO_OPTION);
-                      bIsPaused = false;
-                      clkLogicTimer.setPaused(bIsPaused);
+                     
+                      clkLogicTimer.setPaused(false);
                       if(n==0){
                             Guardar(offset);
                       }
@@ -882,8 +900,10 @@ public class SnakeGame extends JFrame {
             System.out.println(e);
         }
     }
-        if(bIsGameOver){ //para evitar que la snake siga caminando
+        if(bIsPaused||bIsGameOver){ //para evitar que la snake siga caminando
                 clkLogicTimer.setPaused(true);
+                SClipFondo.pause();
+                this.bPausado=true;
             }
     }
     public void nuevoRegistro(RandomAccessFile rafSalida, String sValida)
@@ -1092,6 +1112,8 @@ public class SnakeGame extends JFrame {
         ;
         if(bIsPaused||bIsGameOver){
             clkLogicTimer.setPaused(true);
+            SClipFondo.pause();
+            this.bPausado=true;
         }
     }
     /**
