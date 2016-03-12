@@ -11,6 +11,22 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+/**
+ * Segundo examen proyecto de desarrollo de videojuegos
+ * 
+ * Snake
+ * 
+ * Agregadas funcion de guardar y cargar, algunas imagenes
+ * sonidos, efectos de colores
+ * 
+ * diferentes tipos de objetos buenos y malos
+ * 
+ * José Humberto Guevara Martínez A01280642
+ * 
+ * Juan José López Jaimez A01361534
+ * 
+ * 
+ */
 
 /**
  * The {@code SnakeGame} class is responsible for handling much of the game's
