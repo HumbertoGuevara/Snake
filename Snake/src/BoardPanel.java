@@ -82,6 +82,8 @@ public class BoardPanel extends JPanel {
     //imagen del objeto bueno3
     private Image imaBueno3;
 
+    //arreglo de colores para saber que color modificar una tile
+    private Color[] colColores;
     /**
      * Creates a new BoardPanel instance.
      *
@@ -89,8 +91,15 @@ public class BoardPanel extends JPanel {
      */
     public BoardPanel(SnakeGame snkGame) {
         this.snkGame = snkGame;
+        //inicializa las tiles
         this.tltTiles = new TileType[iROW_COUNT * iCOL_COUNT];
-
+        //inicializa los colores
+        this.colColores = new Color[tltTiles.length];
+        //por default todas las tiles se deben de pintar en verde
+        //si se ocupa en ellas una tile del cuerpo de la snake
+        for(int iI=0;iI<colColores.length;iI++){
+            colColores[iI] = Color.GREEN;
+        }
         setPreferredSize(new Dimension(iCOL_COUNT * iTILE_SIZE, iROW_COUNT * iTILE_SIZE));
         setBackground(Color.BLACK);
         //inicializar la imagen de los malos
@@ -136,7 +145,9 @@ public class BoardPanel extends JPanel {
     public void setTile(int iX, int iY, TileType tltType) {
         tltTiles[iY * iROW_COUNT + iX] = tltType;
     }
-
+    public void setColor(int iX, int iY, Color colColor){
+        colColores[iY*iROW_COUNT+iX] = colColor;
+    }
     /**
      * Gets the tile at the desired coordinate.
      *
@@ -147,7 +158,11 @@ public class BoardPanel extends JPanel {
     public TileType getTile(int iX, int iY) {
         return tltTiles[iY * iROW_COUNT + iX];
     }
-
+    //regresa el color asociado a una tile en especifico
+    //misma logica de getTile
+    public Color getColor(int iX, int iY){
+        return colColores[iY*iROW_COUNT+iX];
+    }
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -159,8 +174,10 @@ public class BoardPanel extends JPanel {
         for (int iX = 0; iX < iCOL_COUNT; iX++) {
             for (int iY = 0; iY < iROW_COUNT; iY++) {
                 TileType tltType = getTile(iX, iY);
+                Color colColor = getColor(iX,iY);
                 if (tltType != null) {
-                    drawTile(iX * iTILE_SIZE, iY * iTILE_SIZE, tltType, g);
+                    drawTile(iX * iTILE_SIZE, iY * iTILE_SIZE, tltType
+                            ,colColor, g);
                 }
             }
         }
@@ -227,7 +244,8 @@ public class BoardPanel extends JPanel {
      * @param tltType The type of tile to draw.
      * @param g The graphics object to draw to.
      */
-    private void drawTile(int iX, int iY, TileType tltType, Graphics g) {
+    private void drawTile(int iX, int iY, TileType tltType,Color colColor,
+            Graphics g) {
         /*
 		 * Because each type of tile is drawn differently, it's easiest
 		 * to just run through a switch statement rather than come up with some
@@ -256,7 +274,7 @@ public class BoardPanel extends JPanel {
 		 * entire tile.
              */
             case SnakeBody:
-                g.setColor(Color.GREEN);
+                g.setColor(colColor);
                 g.fillRect(iX, iY, iTILE_SIZE, iTILE_SIZE);
                 break;
 

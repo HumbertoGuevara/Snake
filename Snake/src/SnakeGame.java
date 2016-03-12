@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.LinkedList;
 import java.util.Random;
+import java.awt.Color;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -134,6 +135,13 @@ public class SnakeGame extends JFrame {
      */
     private boolean bisMuteado;
 
+    //para controlar la animacion de los colores
+    //se usa la posicion actual para dibujar los colores especiales
+    //la cantidad para decir cuantas tiles especiales
+    //y el color para cual color especial dibujar
+    private int iPosColor;
+    private int iCantidadColor;
+    private Color colEspecial;
     /**
      * Creates a new SnakeGame instance. Creates a new window, and sets up the
      * controller input.
@@ -143,7 +151,7 @@ public class SnakeGame extends JFrame {
         setLayout(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
-
+        
         /*
 		 * Initialize the game's panels and add them to the window.
          */
@@ -162,6 +170,10 @@ public class SnakeGame extends JFrame {
         //inicializar los otros sonidos útiles
         this.sClipEat = new SoundClip("eat.wav");
         this.sClipDead = new SoundClip("dead.wav");
+        //por default las variables de control de anmacion de color son 0 y verde
+        iPosColor = 0;
+        iCantidadColor = 0;
+        colEspecial = Color.GREEN;
         /*
 	 * Inicializo en false los boleanos que revisan el pausado y muteado. 
 	*/
@@ -407,9 +419,16 @@ public class SnakeGame extends JFrame {
 		 * yield a higher score.
          */
         if (tltCollision == TileType.Fruit) {
+            //actualiza la informacion de las coisiones
             iFruitsEaten++;
             iScore += iNextFruitScore;
             contadorFruitSnake = 2;
+            
+            //genera la animacion de los colores
+            this.iPosColor = 1;
+            this.iCantidadColor = 2;
+            this.colEspecial = Color.RED;
+           
             spawnFruit();
             sClipEat.play();
         } else if (tltCollision == TileType.Fruit2) {
@@ -417,12 +436,22 @@ public class SnakeGame extends JFrame {
             iScore += iNextFruitScore;
             contadorFruitSnake = 3;
             spawnFruit2();
+            //genera la animacion de los colores
+            this.iPosColor = 2;
+            this.iCantidadColor = 3;
+            this.colEspecial = Color.YELLOW;
+            
             sClipEat.play();
         } else if (tltCollision == TileType.Fruit3) {
             iFruitsEaten++;
             iScore += iNextFruitScore;
             contadorFruitSnake = 1;
             spawnFruit3();
+            //genera la animacion de los colores
+            this.iPosColor = 0;
+            this.iCantidadColor = 1;
+            this.colEspecial = Color.ORANGE;
+            
             sClipEat.play();
         } 
         
@@ -495,12 +524,32 @@ public class SnakeGame extends JFrame {
 		 * incase the tile we hit was the tail piece that was just removed
 		 * to prevent a false game over.
          */
+        if(this.iCantidadColor!=0){
+            for(int iI=0;iI<iCantidadColor;iI++){
+                
+                Point pntP = lklSnake.get(iPosColor-iI);
+                bpnBoard.setColor(pntP.x,pntP.y,colEspecial);
+            
+            }
+            for(int iI=iPosColor-iCantidadColor;iI>=0;iI--){
+                Point pntP = lklSnake.get(iI);
+                bpnBoard.setColor(pntP.x,pntP.y,Color.GREEN);
+            }
+            iPosColor++;
+        }
+        if(iPosColor>=lklSnake.size()){
+            iCantidadColor = 0;
+            for(Point pntP : lklSnake){
+                bpnBoard.setColor(pntP.x,pntP.y,Color.GREEN);
+            }
+        }
         TileType tltOld = bpnBoard.getTile(pntHead.x, pntHead.y);
         if (tltOld != TileType.Fruit && tltOld != TileType.Fruit2 && tltOld != TileType.Fruit3
                 && --contadorFruitSnake < 1 && tltOld != TileType.Venom && lklSnake.size() > iMIN_SNAKE_LENGTH) {
             Point tail = lklSnake.removeLast();
             bpnBoard.setTile(tail, null);
             tltOld = bpnBoard.getTile(pntHead.x, pntHead.y);
+            
         }
         /*
 		 * Update the snake's position on the board if we didn't collide with
