@@ -637,6 +637,11 @@ public class SnakeGame extends JFrame {
         this.bPausado = false;
         this.SClipFondo.setLooping(true);
         this.SClipFondo.play();
+        
+        //reiniciar variables de animacion de color
+        this.iPosColor = 0;
+        this.iCantidadColor = 0;
+        this.colEspecial = Color.GREEN;
         }
     
 
