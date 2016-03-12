@@ -858,11 +858,11 @@ public class SnakeGame extends JFrame {
         }
         return sSalida;
     }
-    public String entradaUsuario(){
+    public String entradaUsuario(String sFunc){
         clkLogicTimer.setPaused(true);
         String sUser = (String)JOptionPane.showInputDialog(
                     this,
-                    "Enter your username to load",
+                    "Enter your username to " +sFunc,
                     "Load",
                     JOptionPane.PLAIN_MESSAGE,
                     null,
@@ -898,7 +898,7 @@ public class SnakeGame extends JFrame {
             JOptionPane.showMessageDialog(this, "The game must be running");
             
         }else{
-        String sUser = entradaUsuario();
+        String sUser = entradaUsuario("Load");
         if(sUser != null){
         String sValida = validar(sUser);
         try{
@@ -930,7 +930,7 @@ public class SnakeGame extends JFrame {
             JOptionPane.showMessageDialog(this, "The game must be running");
             
         }else{
-        String sUser = entradaUsuario();
+        String sUser = entradaUsuario("Save");
         if(sUser != null){
         String sValida = validar(sUser);
         RandomAccessFile rafSalida;
