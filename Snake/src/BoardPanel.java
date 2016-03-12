@@ -354,12 +354,20 @@ public class BoardPanel extends JPanel {
 
         }
     }
+    /**
+     * funcion que sirve para traducir el tablero de tiles
+     * a un arreglo de integers que se pueda guardar en un archivo binario
+     * para poder hacer save/load
+     * 
+     * @return int[]
+     */
     public int[] getTablero(){
         int iarrSalida[] = new int[tltTiles.length];
         for(int iC=0;iC<tltTiles.length;iC++){
             if(tltTiles[iC]==null){
-                iarrSalida[iC]=-1;
+                iarrSalida[iC]=-1; //si la tile es null se usa un -1
             }else{
+                //se traduce cada tile a un equivalente numerico
             switch(tltTiles[iC]){
                 case Fruit:
                     iarrSalida[iC] = 1;
@@ -385,15 +393,24 @@ public class BoardPanel extends JPanel {
         }
         return iarrSalida;
     }
+    /**
+     * Funcion opuesta al get tablero
+     * en este caso traduce un arreglo de integers al arreglo de tiles
+     * 
+     * 
+     * 
+     * @param iArrEntrada 
+     */
     public void setTablero(int[] iArrEntrada){
-        tltTiles = new TileType[iArrEntrada.length];
+        tltTiles = new TileType[iArrEntrada.length];//se crean de nuevo los arreglos
         colColores = new Color[tltTiles.length];
         for(int iI=0;iI<colColores.length;iI++){
+            //Se reinician los colores que se dibujan cada tile
             colColores[iI] = Color.GREEN;
         }
-        this.clearBoard();
+        this.clearBoard(); //se limpia el tablero
         for(int iC=0;iC<iArrEntrada.length;iC++){
-            switch(iArrEntrada[iC]){
+            switch(iArrEntrada[iC]){ //se procede a traducir el tablero con los equivalente numericos
                 case -1:
                     tltTiles[iC] = null;
                     break;

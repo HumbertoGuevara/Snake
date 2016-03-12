@@ -858,6 +858,15 @@ public class SnakeGame extends JFrame {
         }
         return sSalida;
     }
+    /**
+     * Funcion que crea un dialogo de entrada para que el usuario introduzca
+     * su usuario a guardar o cargar
+     * 
+     * el parametro que toma sirve para nombrar a la ventana y que diga
+     * save o load dependiendo de donde se manda a llamar
+     * @param sFunc
+     * @return 
+     */
     public String entradaUsuario(String sFunc){
         clkLogicTimer.setPaused(true);
         String sUser = (String)JOptionPane.showInputDialog(
@@ -871,45 +880,75 @@ public class SnakeGame extends JFrame {
         clkLogicTimer.setPaused(false);
         return sUser;
     }
+    /**
+     * muestra un mensaje de error en caso de que el usuario que se introdujo
+     * no se encontrara al momento de intentar cargarlo
+     */
     public void userNotFound(){
         
             clkLogicTimer.setPaused(true);
             JOptionPane.showMessageDialog(this, "User Not Found");
             clkLogicTimer.setPaused(false);
     }
+    /**
+     * Funcion que toma un string de usuario pasada a un formato valido
+     * y lo busca en el archivo de usuarios
+     * 
+     * si lo encuentra regresa un long que es el offset de donde está almacenado
+     * el estdo del juego del usuario en el archivo de save's
+     * 
+     * 
+     * @param sValida
+     * @param rafEntrada
+     * @return
+     * @throws IOException 
+     */
     public long buscarUsuario(String sValida,RandomAccessFile rafEntrada)
     throws IOException{
         while(rafEntrada.getFilePointer()<rafEntrada.length()){
                 String sGuardado = "";
                 for(int iI=0;iI<20;iI++){
-                    sGuardado+=rafEntrada.readChar();
+                    //Se lee un usuario guardado
+                    sGuardado+=rafEntrada.readChar(); 
                 }
-                if(sGuardado.equals(sValida)){
+                if(sGuardado.equals(sValida)){ 
+                    //se comprueba si el usuario leido es igual al que se busca
+                    //de ser asi se regresa el offset
                     return rafEntrada.readLong();
                 }else{
+                    // si no, se lee el offset del usuario leido y se continua
+                    //con la busqueda
                     long lDummy = rafEntrada.readLong();
                 }
             }
-        return -1;
+        return -1; //si no se encuentra el usuario se regresa un -1
     }
+    /**
+     * Funcion general de cargar, toma las entradas de usuario para localizar
+     * en el archivo de save's la posicion que tiene el estado del juego para
+     * este usuario
+     */
     public void Cargar(){
         if(bIsNewGame){
             clkLogicTimer.setPaused(true);
             JOptionPane.showMessageDialog(this, "The game must be running");
             
         }else{
+        //obtener el nombre de usuario
         String sUser = entradaUsuario("Load");
         if(sUser != null){
+        //pasar a una forma valida el string de usuario (20 caracteres exactos)
         String sValida = validar(sUser);
         try{
             RandomAccessFile rafEntrada;
             rafEntrada = new RandomAccessFile("users.dat","rw");
+            //buscar en el archivo users.dat el usuario en cuestion
             long offset = buscarUsuario(sValida,rafEntrada);
             if(offset == -1){
-             userNotFound();
+             userNotFound();//si no se encuentra informarlo al jugador
             }else
             {
-                Cargar(offset);
+                Cargar(offset);//si lo encontró entonces cargar el juego
             }
             
             rafEntrada.close();
@@ -917,6 +956,7 @@ public class SnakeGame extends JFrame {
             System.out.println(e);
         }
         }
+        //para no tener problemas con el estado de pause del clock
         if(bIsPaused||bIsGameOver){
                 clkLogicTimer.setPaused(true);
                 SClipFondo.pause();
@@ -924,29 +964,39 @@ public class SnakeGame extends JFrame {
         }
         }
     }
+    /**
+     * Guardar: 
+     * La lógica es similar a la de cargar, se obtiene del jugador el 
+     * nombre de usuario, se busca entre los usuarios almacenados, solo que
+     * en este caso si no existe entonces crea un nuevo registro, tanto en 
+     * el archivo de usuarios como en el archivo de save's del juego
+     * 
+     */
     public void Guardar(){
         if(bIsNewGame){
             clkLogicTimer.setPaused(true);
             JOptionPane.showMessageDialog(this, "The game must be running");
             
         }else{
-        String sUser = entradaUsuario("Save");
+        String sUser = entradaUsuario("Save"); //obtener el nombre de usuario
         if(sUser != null){
-        String sValida = validar(sUser);
+        String sValida = validar(sUser); //pasarlo a una forma válida
         RandomAccessFile rafSalida;
         try{
             rafSalida = new RandomAccessFile("users.dat","rw");
-            if(rafSalida.length()==0){
+            if(rafSalida.length()==0){ //si el archivo está vacio insertar el usuario directamente
                 for(int iI=0;iI<20;iI++){
                     rafSalida.writeChar(sValida.charAt(iI));
                 }
                 rafSalida.writeLong(0);
                 Guardar(0);
-            }else{
+            }else{//si el archivo no esta vacio buscar el usuario para ver si existe
                 long offset = buscarUsuario(sValida,rafSalida);
-                if(offset == -1){
+                if(offset == -1){//si no existe se crea un nuevo registro
                     nuevoRegistro(rafSalida,sValida);
                 }else{
+                    //si ya existe entonces se pregunta si se quiere
+                    //sobre escribir los datos
                     clkLogicTimer.setPaused(true);
                     int n = JOptionPane.showConfirmDialog(
                             this,
@@ -956,7 +1006,7 @@ public class SnakeGame extends JFrame {
                      
                       clkLogicTimer.setPaused(false);
                       if(n==0){
-                            Guardar(offset);
+                            Guardar(offset); //se guarda en el archivo de datos
                       }
                 }
             }
@@ -973,13 +1023,24 @@ public class SnakeGame extends JFrame {
             }
     }
     }
+    /**
+     * toma un usuario que aún no esta registrado en el archivo users.dat
+     * y lo inserta, calcula el offset que este usuario tiene en el archivo
+     * datos.dat para futuros save's
+     * 
+     * @param rafSalida
+     * @param sValida
+     * @throws IOException 
+     */
     public void nuevoRegistro(RandomAccessFile rafSalida, String sValida)
             throws IOException{
         long offset;
         for(int iI=0;iI<20;iI++){
                         rafSalida.writeChar(sValida.charAt(iI));
                     }
-                    int cantidad = (int) rafSalida.length()/48;
+                    //Se obtiene la cantidad de usuarios registrados hasta el momento
+                    int cantidad = (int) rafSalida.length()/48; 
+                    //el offset es la cantidad de usuarios por el tamaño de registro de cada save en datos.dat
                     offset = 10027*cantidad;
                     rafSalida.writeLong(offset);
                     Guardar(offset);
