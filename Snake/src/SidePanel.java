@@ -49,9 +49,9 @@ public class SidePanel extends JPanel {
 		setBackground(Color.BLACK);
 	}
 	
-	private static final int iSTATISTICS_OFFSET = 150;
+	private static final int iSTATISTICS_OFFSET = 100;
 	
-	private static final int iCONTROLS_OFFSET = 320;
+	private static final int iCONTROLS_OFFSET = 280;
 	
 	private static final int iMESSAGE_STRIDE = 30;
 	
@@ -100,6 +100,7 @@ public class SidePanel extends JPanel {
 		g.drawString("Pause Game: P", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
                 g.drawString("Save Game: G", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
                 g.drawString("Load Game: C", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
+                 g.drawString("Mute Game: M", iLARGE_OFFSET, iDrawY += iMESSAGE_STRIDE);
 	}
 
 }

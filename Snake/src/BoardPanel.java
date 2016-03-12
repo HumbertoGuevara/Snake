@@ -72,6 +72,15 @@ public class BoardPanel extends JPanel {
 
     //imagen de los objetos malos
     private Image imaMalo;
+    
+    //imagen del objeto bueno1
+    private Image imaBueno1;
+    
+    //imagen del objeto bueno2
+    private Image imaBueno2;
+    
+    //imagen del objeto bueno3
+    private Image imaBueno3;
 
     /**
      * Creates a new BoardPanel instance.
@@ -87,6 +96,14 @@ public class BoardPanel extends JPanel {
         //inicializar la imagen de los malos
         URL urlMalo = this.getClass().getResource("skull.png");
         imaMalo = Toolkit.getDefaultToolkit().getImage(urlMalo);
+        
+        //inicializo las imagenes de los buenos
+        URL urlBueno1 = this.getClass().getResource("strawberry.png");
+        imaBueno1 = Toolkit.getDefaultToolkit().getImage(urlBueno1);
+        URL urlBueno2 = this.getClass().getResource("peach.png");
+        imaBueno2 = Toolkit.getDefaultToolkit().getImage(urlBueno2);
+        URL urlBueno3 = this.getClass().getResource("banana.png");
+        imaBueno3 = Toolkit.getDefaultToolkit().getImage(urlBueno3);
 
     }
 
@@ -223,18 +240,15 @@ public class BoardPanel extends JPanel {
 		 * on each side.
              */
             case Fruit:
-                g.setColor(Color.RED);
-                g.fillOval(iX + 2, iY + 2, iTILE_SIZE - 4, iTILE_SIZE - 4);
+                g.drawImage(imaBueno1, iX + 2, iY + 2, iTILE_SIZE, iTILE_SIZE,this);
                 break;
                 
             case Fruit2:
-                g.setColor(Color.BLUE);
-                g.fillOval(iX + 2, iY + 2, iTILE_SIZE - 4, iTILE_SIZE - 4);
+                g.drawImage(imaBueno2, iX + 2, iY + 2, iTILE_SIZE, iTILE_SIZE,this);
                 break;
                 
             case Fruit3:
-                g.setColor(Color.YELLOW);
-                g.fillOval(iX + 2, iY + 2, iTILE_SIZE - 4, iTILE_SIZE - 4);
+                g.drawImage(imaBueno3, iX + 2, iY + 2, iTILE_SIZE, iTILE_SIZE,this);
                 break;
 
             /*
