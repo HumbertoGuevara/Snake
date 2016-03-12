@@ -893,7 +893,11 @@ public class SnakeGame extends JFrame {
         return -1;
     }
     public void Cargar(){
-        
+        if(bIsNewGame){
+            clkLogicTimer.setPaused(true);
+            JOptionPane.showMessageDialog(this, "The game must be running");
+            
+        }else{
         String sUser = entradaUsuario();
         if(sUser != null){
         String sValida = validar(sUser);
@@ -918,8 +922,14 @@ public class SnakeGame extends JFrame {
                 SClipFondo.pause();
                 this.bPausado=true;
         }
+        }
     }
     public void Guardar(){
+        if(bIsNewGame){
+            clkLogicTimer.setPaused(true);
+            JOptionPane.showMessageDialog(this, "The game must be running");
+            
+        }else{
         String sUser = entradaUsuario();
         if(sUser != null){
         String sValida = validar(sUser);
@@ -961,6 +971,7 @@ public class SnakeGame extends JFrame {
                 SClipFondo.pause();
                 this.bPausado=true;
             }
+    }
     }
     public void nuevoRegistro(RandomAccessFile rafSalida, String sValida)
             throws IOException{
