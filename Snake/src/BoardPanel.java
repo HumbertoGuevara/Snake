@@ -387,6 +387,10 @@ public class BoardPanel extends JPanel {
     }
     public void setTablero(int[] iArrEntrada){
         tltTiles = new TileType[iArrEntrada.length];
+        colColores = new Color[tltTiles.length];
+        for(int iI=0;iI<colColores.length;iI++){
+            colColores[iI] = Color.GREEN;
+        }
         this.clearBoard();
         for(int iC=0;iC<iArrEntrada.length;iC++){
             switch(iArrEntrada[iC]){
