@@ -133,7 +133,7 @@ public class SnakeGame extends JFrame {
         /**
      * Variable para saber si el juego ya esta muteado.
      */
-    private boolean bisMuteado;
+    private boolean bIsMuteado;
 
     //para controlar la animacion de los colores
     //se usa la posicion actual para dibujar los colores especiales
@@ -179,7 +179,7 @@ public class SnakeGame extends JFrame {
 	*/
         bPausado = false;
         bMuteado = false;
-        bisMuteado = true;
+        bIsMuteado = true;
         
         
         /*
@@ -275,7 +275,7 @@ public class SnakeGame extends JFrame {
                         if (!bIsGameOver) {
                             bIsPaused = !bIsPaused;
                             clkLogicTimer.setPaused(bIsPaused);
-                            if(bisMuteado)
+                            if(bIsMuteado)
                             {
                             if(bPausado)
                             {
@@ -295,20 +295,22 @@ public class SnakeGame extends JFrame {
                     */
                         
                     case KeyEvent.VK_M:
-
+                        if (!bIsGameOver && !bIsPaused) {
                         if(bMuteado)
                         {
+                        //mutea el sonido cuando el usuario presione la tecla m
                         SClipFondo.stop();
-                        bisMuteado = false;
+                        bIsMuteado = false;
                         }
                         else
                         {
+                        //vuelve a correr la musica cuando el usuario vuelva a presionar m
                         SClipFondo.setLooping(true);
                         SClipFondo.play();
-                        bisMuteado = true;
+                        bIsMuteado = true;
                         }
                         bMuteado = !bMuteado;
-                        
+                        }
                         break;
 
                     /*
